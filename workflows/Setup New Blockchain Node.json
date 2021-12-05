@@ -1,0 +1,355 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Check Node Already Initialized",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Check Node Already Initialized",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Public/Private Key Pair": {
+      "main": [
+        [
+          {
+            "node": "Add Name Property",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Node Already Initialized": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Reset Node",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Public/Private Key Pair",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reset Node": {
+      "main": [
+        [
+          {
+            "node": "Create Public/Private Key Pair",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Name Property": {
+      "main": [
+        [
+          {
+            "node": "Insert Own Identity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Genesis Block Data": {
+      "main": [
+        [
+          {
+            "node": "Sign Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Own Identity": {
+      "main": [
+        [
+          {
+            "node": "Set Genesis Block Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Genesis Block": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Block Number": {
+      "main": [
+        [
+          {
+            "node": "Insert Genesis Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sign Block": {
+      "main": [
+        [
+          {
+            "node": "Set Block Number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-05T10:13:18.678Z",
+  "id": "3",
+  "name": "Setup New Blockchain Node",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "path": "setupNode",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        540
+      ],
+      "webhookId": "ed0c39ce-2097-499e-8a5b-a9d5e65faf9c"
+    },
+    {
+      "parameters": {
+        "workflowId": "2"
+      },
+      "name": "Create Public/Private Key Pair",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "noData",
+        "options": {
+          "responseCode": 201
+        }
+      },
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        2160,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Check Node Already Initialized\"].json[\"isInitialized\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        760,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "4"
+      },
+      "name": "Check Node Already Initialized",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        560,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "7"
+      },
+      "name": "Reset Node",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "name",
+              "value": "me"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Add Name Property",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return [ {json: {\n    payload: {\n      transactions: []\n    }\n  }}\n];"
+      },
+      "name": "Set Genesis Block Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "identities",
+        "fields": "privateKey, publicKey, name",
+        "options": {}
+      },
+      "name": "Insert Own Identity",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        540
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "blocks",
+        "fields": "payload, hash, number",
+        "options": {}
+      },
+      "name": "Insert Genesis Block",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        2040,
+        800
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set Block Number",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1880,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "10"
+      },
+      "name": "Sign Block",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1720,
+        800
+      ],
+      "alwaysOutputData": false
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2021-12-05T19:10:46.966Z"
+}
