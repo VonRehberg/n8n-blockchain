@@ -1,0 +1,62 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-05T22:06:30.559Z",
+  "id": "15",
+  "name": "Create UUID",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "path": "f9a7aa2b-1d59-453c-90f4-16484ca2c0fc",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        500
+      ],
+      "webhookId": "f9a7aa2b-1d59-453c-90f4-16484ca2c0fc"
+    },
+    {
+      "parameters": {
+        "functionCode": "const uuid = require('uuid');\nreturn items.map((item) => {\n  return {\n    json: {uuid: uuid.v4()}\n  };\n});\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        500,
+        360
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2021-12-05T22:11:10.560Z"
+}
