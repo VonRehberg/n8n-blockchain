@@ -103,6 +103,11 @@
             "node": "Set Genesis Block Data",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -134,6 +139,28 @@
         [
           {
             "node": "Set Block Number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
             "type": "main",
             "index": 0
           }
@@ -193,8 +220,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        2160,
-        540
+        3260,
+        880
       ]
     },
     {
@@ -268,8 +295,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1460,
-        800
+        2340,
+        880
       ]
     },
     {
@@ -277,7 +304,9 @@
         "operation": "insert",
         "collection": "identities",
         "fields": "privateKey, publicKey, name",
-        "options": {}
+        "options": {
+          "dateFields": "createdAt"
+        }
       },
       "name": "Insert Own Identity",
       "type": "n8n-nodes-base.mongoDb",
@@ -297,15 +326,17 @@
       "parameters": {
         "operation": "insert",
         "collection": "blocks",
-        "fields": "payload, hash, number",
-        "options": {}
+        "fields": "payload, hash, number,createdAt, signature, publicKey",
+        "options": {
+          "dateFields": "createdAt"
+        }
       },
       "name": "Insert Genesis Block",
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1,
       "position": [
-        2040,
-        800
+        2920,
+        880
       ],
       "alwaysOutputData": true,
       "credentials": {
@@ -330,8 +361,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        1880,
-        800
+        2760,
+        880
       ]
     },
     {
@@ -342,14 +373,63 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1,
       "position": [
-        1720,
-        800
+        2600,
+        880
       ],
       "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "endpoint",
+              "value": "={{$node[\"Webhook\"].json[\"headers\"][\"host\"]}}"
+            },
+            {
+              "name": "name",
+              "value": "me"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2140,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "nodes",
+        "fields": "name, endpoint",
+        "options": {
+          "dateFields": "createdAt"
+        }
+      },
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        2440,
+        540
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2021-12-05T19:10:46.966Z"
+  "updatedAt": "2021-12-05T21:29:42.697Z"
 }
