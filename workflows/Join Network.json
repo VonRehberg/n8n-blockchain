@@ -1,0 +1,205 @@
+{
+  "active": false,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get Own Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Get Own Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Own Node": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Crypto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crypto": {
+      "main": [
+        [
+          {
+            "node": "Insert Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-05T21:07:47.673Z",
+  "id": "12",
+  "name": "Join Network",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "joinNetwork",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        540
+      ],
+      "webhookId": "4343d6b5-838f-413e-8c29-829b9c4c7649"
+    },
+    {
+      "parameters": {
+        "collection": "nodes",
+        "options": {},
+        "query": "{\"name\": \"me\"}"
+      },
+      "name": "Get Own Node",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        540,
+        400
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "=http://{{$node[\"Webhook\"].json[\"body\"][\"endpoint\"]}}/webhook/addNode",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "endpoint",
+              "value": "={{$data[\"endpoint\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        740,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "endpoint",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"endpoint\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        920,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "nodes",
+        "fields": "name, endpoint",
+        "options": {
+          "dateFields": "createdAt"
+        }
+      },
+      "name": "Insert Node",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        400
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "value": "endpoint",
+        "dataPropertyName": "name"
+      },
+      "name": "Crypto",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        400
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2021-12-05T21:46:31.982Z"
+}
