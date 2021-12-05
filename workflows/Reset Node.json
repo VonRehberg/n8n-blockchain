@@ -1,0 +1,141 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Delete Nodes",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Delete Identities",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Delete Blocks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Delete Nodes",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Delete Identities",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Delete Blocks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-05T12:25:28.678Z",
+  "id": "7",
+  "name": "Reset Node",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "path": "0c8348ae-a11b-42b8-abab-619ef478a35d",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        480
+      ],
+      "webhookId": "0c8348ae-a11b-42b8-abab-619ef478a35d"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "blocks"
+      },
+      "name": "Delete Blocks",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        620,
+        120
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "identities"
+      },
+      "name": "Delete Identities",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        620,
+        300
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "nodes"
+      },
+      "name": "Delete Nodes",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        620,
+        480
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2021-12-05T15:08:44.212Z"
+}
