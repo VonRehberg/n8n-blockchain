@@ -1,0 +1,222 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Search For Own Identity",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Search For Genesis Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Search For Genesis Block",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Search For Own Identity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search For Genesis Block": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search For Own Identity": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Set IsInitialized True",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set IsInitialized False",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-05T10:53:23.580Z",
+  "id": "4",
+  "name": "Check If Node Is Setup",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "path": "dd8d150c-1285-4968-b904-ff65ca3e43f1",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        520
+      ],
+      "webhookId": "dd8d150c-1285-4968-b904-ff65ca3e43f1"
+    },
+    {
+      "parameters": {
+        "collection": "blocks",
+        "options": {},
+        "query": "{\"number\": 0}"
+      },
+      "name": "Search For Genesis Block",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        500,
+        360
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "collection": "identities",
+        "options": {},
+        "query": "{\"name\": \"me\"}"
+      },
+      "name": "Search For Own Identity",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        500,
+        660
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Search For Genesis Block\"].json[\"number\"]}}",
+              "operation": "largerEqual",
+              "value2": 1
+            }
+          ],
+          "string": [
+            {
+              "value1": "={{$node[\"Search For Own Identity\"].json[\"name\"]}}",
+              "value2": "me"
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        720,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "boolean": [
+            {
+              "name": "isInitialized",
+              "value": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set IsInitialized True",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        940,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "boolean": [
+            {
+              "name": "isInitialized"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set IsInitialized False",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        940,
+        640
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2021-12-05T15:14:25.624Z"
+}
