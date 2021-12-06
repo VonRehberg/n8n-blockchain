@@ -1,0 +1,199 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Get Nodes Apart From Own",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Own Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Nodes Apart From Own": {
+      "main": [
+        [
+          {
+            "node": "Fetch Remote Nodes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Get Nodes Apart From Own",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Own Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Remote Nodes": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Own Node": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2021-12-06T13:33:11.370Z",
+  "id": "17",
+  "name": "Synchronize Nodes",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "collection": "nodes",
+        "options": {},
+        "query": "{\"name\": {\"$ne\": \"me\"}}"
+      },
+      "name": "Get Nodes Apart From Own",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        240,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const existingItems = $items(\"Get Nodes Apart From Own\");\nconst ownNode = $items(\"Get Own Node\");\nconst crypto = require('crypto');\nconst items = $items(\"Fetch Remote Nodes\");\n\nconst newItems = [];\nfor (const item of items) {\n  let found = false;\n  for (const existingItem of existingItems) {\n    if (existingItem.endpoint == item.endpoint) {\n      found = true;\n    }\n  }\n  if (found === false && item.endpoint !== ownNode[0].endpoint) {\n    item.name = crypto.createHash('md5').update(item.name).digest(\"hex\");\n    newItems.push(item);\n  }\n}\n\nreturn newItems;"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "collection": "nodes",
+        "options": {},
+        "query": "{\"name\": \"me\"}"
+      },
+      "name": "Get Own Node",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        460,
+        120
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "nodes",
+        "fields": "name, endpoint",
+        "options": {}
+      },
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        300
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=http://{{$data[\"endpoint\"]}}/webhook/getNodes",
+        "options": {}
+      },
+      "name": "Fetch Remote Nodes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        720,
+        300
+      ]
+    }
+  ],
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "updatedAt": "2021-12-06T14:15:35.061Z"
+}
