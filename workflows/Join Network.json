@@ -5,18 +5,17 @@
       "main": [
         [
           {
-            "node": "Get Own Node",
+            "node": "Delete Nodes Except Own",
             "type": "main",
             "index": 0
-          }
-        ]
-      ]
-    },
-    "Start": {
-      "main": [
-        [
+          },
           {
-            "node": "Get Own Node",
+            "node": "Delete All Blocks",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Delete Identities Except Own",
             "type": "main",
             "index": 0
           }
@@ -66,6 +65,44 @@
           }
         ]
       ]
+    },
+    "Insert Node": {
+      "main": [
+        []
+      ]
+    },
+    "Delete Nodes Except Own": {
+      "main": [
+        [
+          {
+            "node": "Get Own Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Identities Except Own": {
+      "main": [
+        [
+          {
+            "node": "Get Own Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete All Blocks": {
+      "main": [
+        [
+          {
+            "node": "Get Own Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2021-12-05T21:07:47.673Z",
@@ -108,7 +145,7 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1,
       "position": [
-        540,
+        860,
         400
       ],
       "credentials": {
@@ -136,7 +173,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        740,
+        1060,
         400
       ]
     },
@@ -157,7 +194,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        920,
+        1240,
         400
       ]
     },
@@ -174,7 +211,7 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1,
       "position": [
-        1280,
+        1600,
         400
       ],
       "credentials": {
@@ -193,13 +230,72 @@
       "type": "n8n-nodes-base.crypto",
       "typeVersion": 1,
       "position": [
-        1100,
+        1420,
         400
       ]
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "nodes",
+        "query": "{\"name\": {\"$ne\": \"me\"}}"
+      },
+      "name": "Delete Nodes Except Own",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        540,
+        300
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "blocks"
+      },
+      "name": "Delete All Blocks",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        540,
+        760
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "identities",
+        "query": "{\"name\": {\"$ne\": \"me\"}}"
+      },
+      "name": "Delete Identities Except Own",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        540,
+        540
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
     }
   ],
   "settings": {},
   "staticData": null,
   "tags": [],
-  "updatedAt": "2021-12-05T22:01:53.700Z"
+  "updatedAt": "2021-12-06T13:20:23.402Z"
 }
