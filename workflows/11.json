@@ -1,0 +1,69 @@
+{
+    "id": 11,
+    "name": "Backup Workflows",
+    "active": true,
+    "nodes": [
+      {
+        "parameters": {},
+        "name": "Start",
+        "type": "n8n-nodes-base.start",
+        "typeVersion": 1,
+        "position": [
+          240,
+          300
+        ]
+      },
+      {
+        "parameters": {
+          "command": "n8n export:workflow --backup --output=/workflows"
+        },
+        "name": "Execute Command",
+        "type": "n8n-nodes-base.executeCommand",
+        "typeVersion": 1,
+        "position": [
+          460,
+          300
+        ]
+      },
+      {
+        "parameters": {
+          "unit": "hours"
+        },
+        "name": "Interval",
+        "type": "n8n-nodes-base.interval",
+        "typeVersion": 1,
+        "position": [
+          240,
+          520
+        ]
+      }
+    ],
+    "connections": {
+      "Start": {
+        "main": [
+          [
+            {
+              "node": "Execute Command",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Interval": {
+        "main": [
+          [
+            {
+              "node": "Execute Command",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "createdAt": "2021-12-07T16:43:27.502Z",
+    "updatedAt": "2021-12-07T16:45:29.586Z",
+    "settings": {},
+    "staticData": null
+  }
