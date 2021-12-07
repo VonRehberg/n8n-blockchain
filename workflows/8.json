@@ -1,21 +1,7 @@
 {
-  "active": true,
-  "connections": {
-    "Webhook": {
-      "main": [
-        [
-          {
-            "node": "MongoDB",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
-  "createdAt": "2021-12-05T21:39:14.001Z",
-  "id": "14",
+  "id": 8,
   "name": "Get Nodes",
+  "active": true,
   "nodes": [
     {
       "parameters": {},
@@ -63,8 +49,21 @@
       }
     }
   ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-05T21:39:14.001Z",
+  "updatedAt": "2021-12-05T21:40:39.588Z",
   "settings": {},
-  "staticData": null,
-  "tags": [],
-  "updatedAt": "2021-12-05T21:40:39.588Z"
+  "staticData": null
 }

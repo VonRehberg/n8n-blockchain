@@ -1,113 +1,7 @@
 {
-  "active": true,
-  "connections": {
-    "Webhook": {
-      "main": [
-        [
-          {
-            "node": "Delete Nodes Except Own",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Delete All Blocks",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Delete Identities Except Own",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Own Node": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request": {
-      "main": [
-        [
-          {
-            "node": "Set",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Set": {
-      "main": [
-        [
-          {
-            "node": "Crypto",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Crypto": {
-      "main": [
-        [
-          {
-            "node": "Insert Node",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Insert Node": {
-      "main": [
-        []
-      ]
-    },
-    "Delete Nodes Except Own": {
-      "main": [
-        [
-          {
-            "node": "Get Own Node",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Delete Identities Except Own": {
-      "main": [
-        [
-          {
-            "node": "Get Own Node",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Delete All Blocks": {
-      "main": [
-        [
-          {
-            "node": "Get Own Node",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
-  "createdAt": "2021-12-05T21:07:47.673Z",
-  "id": "12",
+  "id": 6,
   "name": "Join Network",
+  "active": true,
   "nodes": [
     {
       "parameters": {},
@@ -294,8 +188,113 @@
       }
     }
   ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Delete Nodes Except Own",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Delete All Blocks",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Delete Identities Except Own",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Own Node": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Crypto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crypto": {
+      "main": [
+        [
+          {
+            "node": "Insert Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Node": {
+      "main": [
+        []
+      ]
+    },
+    "Delete Nodes Except Own": {
+      "main": [
+        [
+          {
+            "node": "Get Own Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Identities Except Own": {
+      "main": [
+        [
+          {
+            "node": "Get Own Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete All Blocks": {
+      "main": [
+        [
+          {
+            "node": "Get Own Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-05T21:07:47.673Z",
+  "updatedAt": "2021-12-06T13:20:23.402Z",
   "settings": {},
-  "staticData": null,
-  "tags": [],
-  "updatedAt": "2021-12-06T13:20:23.402Z"
+  "staticData": null
 }

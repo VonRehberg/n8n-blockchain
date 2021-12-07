@@ -1,32 +1,7 @@
 {
-  "active": true,
-  "connections": {
-    "Start": {
-      "main": [
-        [
-          {
-            "node": "Function",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Webhook": {
-      "main": [
-        [
-          {
-            "node": "Function",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
-  "createdAt": "2021-12-05T10:05:33.415Z",
-  "id": "2",
+  "id": 1,
   "name": "Create new Private Public Key Pair",
+  "active": true,
   "nodes": [
     {
       "parameters": {},
@@ -66,8 +41,32 @@
       "webhookId": "aebea9e6-3eca-4533-870b-737773a9d373"
     }
   ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-05T10:05:33.415Z",
+  "updatedAt": "2021-12-05T20:55:43.438Z",
   "settings": {},
-  "staticData": null,
-  "tags": [],
-  "updatedAt": "2021-12-05T20:55:43.438Z"
+  "staticData": null
 }

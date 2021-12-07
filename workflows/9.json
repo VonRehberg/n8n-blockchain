@@ -1,21 +1,7 @@
 {
-  "active": true,
-  "connections": {
-    "Webhook": {
-      "main": [
-        [
-          {
-            "node": "Function",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
-  "createdAt": "2021-12-05T22:06:30.559Z",
-  "id": "15",
+  "id": 9,
   "name": "Create UUID",
+  "active": true,
   "nodes": [
     {
       "parameters": {},
@@ -55,8 +41,21 @@
       ]
     }
   ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-05T22:06:30.559Z",
+  "updatedAt": "2021-12-05T22:11:10.560Z",
   "settings": {},
-  "staticData": null,
-  "tags": [],
-  "updatedAt": "2021-12-05T22:11:10.560Z"
+  "staticData": null
 }

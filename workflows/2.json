@@ -1,5 +1,264 @@
 {
+  "id": 2,
+  "name": "Setup New Blockchain Node",
   "active": true,
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "path": "setupNode",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        540
+      ],
+      "webhookId": "ed0c39ce-2097-499e-8a5b-a9d5e65faf9c"
+    },
+    {
+      "parameters": {
+        "workflowId": "1"
+      },
+      "name": "Create Public/Private Key Pair",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "noData",
+        "options": {
+          "responseCode": 201
+        }
+      },
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        3260,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Check Node Already Initialized\"].json[\"isInitialized\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        760,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "4"
+      },
+      "name": "Check Node Already Initialized",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        560,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "7"
+      },
+      "name": "Reset Node",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "name",
+              "value": "me"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Add Name Property",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return [ {json: {\n    payload: {\n      transactions: []\n    }\n  }}\n];"
+      },
+      "name": "Set Genesis Block Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2340,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "identities",
+        "fields": "privateKey, publicKey, name",
+        "options": {
+          "dateFields": "createdAt"
+        }
+      },
+      "name": "Insert Own Identity",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        540
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "blocks",
+        "fields": "payload, hash, number,createdAt, signature, publicKey",
+        "options": {
+          "dateFields": "createdAt"
+        }
+      },
+      "name": "Insert Genesis Block",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        2920,
+        880
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set Block Number",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2760,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "5"
+      },
+      "name": "Sign Block",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        2600,
+        880
+      ],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "endpoint",
+              "value": "={{$node[\"Webhook\"].json[\"headers\"][\"host\"]}}"
+            },
+            {
+              "name": "name",
+              "value": "me"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2140,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "nodes",
+        "fields": "name, endpoint",
+        "options": {
+          "dateFields": "createdAt"
+        }
+      },
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        2440,
+        540
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    }
+  ],
   "connections": {
     "Webhook": {
       "main": [
@@ -169,267 +428,7 @@
     }
   },
   "createdAt": "2021-12-05T10:13:18.678Z",
-  "id": "3",
-  "name": "Setup New Blockchain Node",
-  "nodes": [
-    {
-      "parameters": {},
-      "name": "Start",
-      "type": "n8n-nodes-base.start",
-      "typeVersion": 1,
-      "position": [
-        240,
-        300
-      ]
-    },
-    {
-      "parameters": {
-        "path": "setupNode",
-        "responseMode": "responseNode",
-        "options": {}
-      },
-      "name": "Webhook",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
-      "position": [
-        240,
-        540
-      ],
-      "webhookId": "ed0c39ce-2097-499e-8a5b-a9d5e65faf9c"
-    },
-    {
-      "parameters": {
-        "workflowId": "2"
-      },
-      "name": "Create Public/Private Key Pair",
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1,
-      "position": [
-        1380,
-        540
-      ]
-    },
-    {
-      "parameters": {
-        "respondWith": "noData",
-        "options": {
-          "responseCode": 201
-        }
-      },
-      "name": "Respond to Webhook",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
-      "position": [
-        3260,
-        880
-      ]
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "boolean": [
-            {
-              "value1": "={{$node[\"Check Node Already Initialized\"].json[\"isInitialized\"]}}",
-              "value2": true
-            }
-          ]
-        }
-      },
-      "name": "IF",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [
-        760,
-        340
-      ]
-    },
-    {
-      "parameters": {
-        "workflowId": "4"
-      },
-      "name": "Check Node Already Initialized",
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1,
-      "position": [
-        560,
-        340
-      ]
-    },
-    {
-      "parameters": {
-        "workflowId": "7"
-      },
-      "name": "Reset Node",
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1,
-      "position": [
-        1040,
-        260
-      ]
-    },
-    {
-      "parameters": {
-        "values": {
-          "string": [
-            {
-              "name": "name",
-              "value": "me"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "name": "Add Name Property",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 1,
-      "position": [
-        1600,
-        540
-      ]
-    },
-    {
-      "parameters": {
-        "functionCode": "return [ {json: {\n    payload: {\n      transactions: []\n    }\n  }}\n];"
-      },
-      "name": "Set Genesis Block Data",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        2340,
-        880
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "insert",
-        "collection": "identities",
-        "fields": "privateKey, publicKey, name",
-        "options": {
-          "dateFields": "createdAt"
-        }
-      },
-      "name": "Insert Own Identity",
-      "type": "n8n-nodes-base.mongoDb",
-      "typeVersion": 1,
-      "position": [
-        1800,
-        540
-      ],
-      "credentials": {
-        "mongoDb": {
-          "id": "1",
-          "name": "MongoDB account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "insert",
-        "collection": "blocks",
-        "fields": "payload, hash, number,createdAt, signature, publicKey",
-        "options": {
-          "dateFields": "createdAt"
-        }
-      },
-      "name": "Insert Genesis Block",
-      "type": "n8n-nodes-base.mongoDb",
-      "typeVersion": 1,
-      "position": [
-        2920,
-        880
-      ],
-      "alwaysOutputData": true,
-      "credentials": {
-        "mongoDb": {
-          "id": "1",
-          "name": "MongoDB account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "values": {
-          "number": [
-            {
-              "name": "number"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "name": "Set Block Number",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 1,
-      "position": [
-        2760,
-        880
-      ]
-    },
-    {
-      "parameters": {
-        "workflowId": "10"
-      },
-      "name": "Sign Block",
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1,
-      "position": [
-        2600,
-        880
-      ],
-      "alwaysOutputData": false
-    },
-    {
-      "parameters": {
-        "keepOnlySet": true,
-        "values": {
-          "string": [
-            {
-              "name": "endpoint",
-              "value": "={{$node[\"Webhook\"].json[\"headers\"][\"host\"]}}"
-            },
-            {
-              "name": "name",
-              "value": "me"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "name": "Set",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 1,
-      "position": [
-        2140,
-        540
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "insert",
-        "collection": "nodes",
-        "fields": "name, endpoint",
-        "options": {
-          "dateFields": "createdAt"
-        }
-      },
-      "name": "MongoDB",
-      "type": "n8n-nodes-base.mongoDb",
-      "typeVersion": 1,
-      "position": [
-        2440,
-        540
-      ],
-      "alwaysOutputData": true,
-      "credentials": {
-        "mongoDb": {
-          "id": "1",
-          "name": "MongoDB account"
-        }
-      }
-    }
-  ],
+  "updatedAt": "2021-12-05T21:29:42.697Z",
   "settings": {},
-  "staticData": null,
-  "tags": [],
-  "updatedAt": "2021-12-05T21:29:42.697Z"
+  "staticData": null
 }

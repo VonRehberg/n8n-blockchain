@@ -1,82 +1,7 @@
 {
-  "active": true,
-  "connections": {
-    "Webhook": {
-      "main": [
-        [
-          {
-            "node": "Search For Own Identity",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Search For Genesis Block",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Start": {
-      "main": [
-        [
-          {
-            "node": "Search For Genesis Block",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Search For Own Identity",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Search For Genesis Block": {
-      "main": [
-        [
-          {
-            "node": "IF",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Search For Own Identity": {
-      "main": [
-        [
-          {
-            "node": "IF",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "IF": {
-      "main": [
-        [
-          {
-            "node": "Set IsInitialized True",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Set IsInitialized False",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
-  "createdAt": "2021-12-05T10:53:23.580Z",
-  "id": "4",
+  "id": 3,
   "name": "Check If Node Is Setup",
+  "active": true,
   "nodes": [
     {
       "parameters": {},
@@ -91,7 +16,7 @@
     },
     {
       "parameters": {
-        "path": "dd8d150c-1285-4968-b904-ff65ca3e43f1",
+        "path": "isNodeSetup",
         "responseMode": "lastNode",
         "options": {}
       },
@@ -215,8 +140,82 @@
       ]
     }
   ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Search For Own Identity",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Search For Genesis Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Search For Genesis Block",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Search For Own Identity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search For Genesis Block": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search For Own Identity": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Set IsInitialized True",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set IsInitialized False",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-05T10:53:23.580Z",
+  "updatedAt": "2021-12-05T15:14:25.624Z",
   "settings": {},
-  "staticData": null,
-  "tags": [],
-  "updatedAt": "2021-12-05T15:14:25.624Z"
+  "staticData": null
 }

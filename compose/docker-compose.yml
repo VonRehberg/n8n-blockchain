@@ -1,0 +1,56 @@
+version: '3.1'
+
+services:
+
+  postgres:
+    image: postgres:11
+    restart: always
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_NON_ROOT_USER
+      - POSTGRES_NON_ROOT_PASSWORD
+    volumes:
+      - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
+
+  mongodb:
+    image: mongo:4.4.9
+    restart: always
+    environment:
+      - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      - GOSU_VERSION=1.12
+      - JSYAML_VERSION=3.13.1
+      - MONGO_PACKAGE=mongodb-org
+      - MONGO_REPO=repo.mongodb.org
+      - MONGO_MAJOR=4.4
+      - MONGO_VERSION=4.4.9
+  
+  n8n:
+    image: n8nio/n8n
+    restart: always
+    environment:
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_NON_ROOT_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER
+      - N8N_BASIC_AUTH_PASSWORD
+      - NODE_FUNCTION_ALLOW_EXTERNAL=uuid
+      - NODE_FUNCTION_ALLOW_BUILTIN=crypto
+    ports:
+      - 5678:5678
+    links:
+      - postgres
+      - mongodb:mongo
+    volumes:
+      - ../n8ndata:/home/node/.n8n
+      - ../workflows:/workflows
+      - ../credentials:/credentials
+      - ./start-n8n.sh:/start-data.sh
+    # Wait 5 seconds to start n8n to make sure that PostgreSQL is ready
+    # when n8n tries to connect to it
+    command: sh /start-data.sh

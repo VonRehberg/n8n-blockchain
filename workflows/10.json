@@ -1,80 +1,7 @@
 {
-  "active": false,
-  "connections": {
-    "Start": {
-      "main": [
-        [
-          {
-            "node": "Get Nodes Apart From Own",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Get Own Node",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Nodes Apart From Own": {
-      "main": [
-        [
-          {
-            "node": "Fetch Remote Nodes",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Function": {
-      "main": [
-        [
-          {
-            "node": "MongoDB",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Cron": {
-      "main": [
-        [
-          {
-            "node": "Get Nodes Apart From Own",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Get Own Node",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Fetch Remote Nodes": {
-      "main": [
-        [
-          {
-            "node": "Function",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Own Node": {
-      "main": [
-        []
-      ]
-    }
-  },
-  "createdAt": "2021-12-06T13:33:11.370Z",
-  "id": "17",
+  "id": 10,
   "name": "Synchronize Nodes",
+  "active": false,
   "nodes": [
     {
       "parameters": {},
@@ -192,8 +119,80 @@
       ]
     }
   ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Get Nodes Apart From Own",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Own Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Nodes Apart From Own": {
+      "main": [
+        [
+          {
+            "node": "Fetch Remote Nodes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Get Nodes Apart From Own",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Own Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Remote Nodes": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Own Node": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2021-12-06T13:33:11.370Z",
+  "updatedAt": "2021-12-06T14:15:35.061Z",
   "settings": {},
-  "staticData": null,
-  "tags": [],
-  "updatedAt": "2021-12-06T14:15:35.061Z"
+  "staticData": null
 }
