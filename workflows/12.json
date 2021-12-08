@@ -1,0 +1,358 @@
+[{
+  "id": 12,
+  "name": "Create Identity",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "createIdentity",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        500
+      ],
+      "webhookId": "f909684d-3ee4-49d9-9bce-80e7b75ef52d"
+    },
+    {
+      "parameters": {
+        "collection": "identities",
+        "options": {},
+        "query": "={\"name\": \"{{$node[\"Webhook\"].json[\"body\"][\"name\"]}}\"}"
+      },
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        500,
+        320
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"name\"]}}",
+              "value2": "={{$node[\"Webhook\"].json[\"body\"][\"name\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        740,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "noData",
+        "options": {
+          "responseCode": 409
+        }
+      },
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "name",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"name\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Respond to Webhook1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "1"
+      },
+      "name": "Create New Private Public Keypair",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "identities",
+        "fields": "name, publicKey",
+        "options": {}
+      },
+      "name": "Insert new Identity",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        480
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": "13"
+      },
+      "name": "Create New Transaction",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        2240,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "privateKey",
+              "value": "={{$node[\"Create New Private Public Keypair\"].json[\"privateKey\"]}}"
+            },
+            {
+              "name": "publicKey",
+              "value": "={{$node[\"Create New Private Public Keypair\"].json[\"publicKey\"]}}"
+            },
+            {
+              "name": "name",
+              "value": "={{$json[\"name\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Construct Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1660,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "data.type",
+              "value": "newIdentity"
+            },
+            {
+              "name": "data.name",
+              "value": "={{$json[\"name\"]}}"
+            },
+            {
+              "name": "publicKey",
+              "value": "={{$json[\"publicKey\"]}}"
+            }
+          ]
+        },
+        "options": {
+          "dotNotation": true
+        }
+      },
+      "name": "Construct Transaction Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "action": "sign",
+        "value": "={{JSON.stringify($json[\"data\"])}}",
+        "dataPropertyName": "signature",
+        "algorithm": "id-rsassa-pkcs1-v1_5-with-sha3-256",
+        "privateKey": "={{$node[\"Create New Private Public Keypair\"].json[\"privateKey\"]}}"
+      },
+      "name": "Crypto",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        2060,
+        260
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create New Private Public Keypair",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Insert new Identity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create New Private Public Keypair": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert new Identity": {
+      "main": [
+        [
+          {
+            "node": "Construct Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construct Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Construct Transaction Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construct Transaction Data": {
+      "main": [
+        [
+          {
+            "node": "Crypto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crypto": {
+      "main": [
+        [
+          {
+            "node": "Create New Transaction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-08T15:58:02.869Z",
+  "updatedAt": "2021-12-08T16:45:47.419Z",
+  "settings": {},
+  "staticData": null
+}]
