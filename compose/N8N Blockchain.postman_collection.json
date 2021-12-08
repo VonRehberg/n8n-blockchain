@@ -1,0 +1,285 @@
+{
+	"info": {
+		"_postman_id": "2577be22-3737-4ffe-b2c6-da538e9a3be1",
+		"name": "N8N Blockchain",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Setup Node1",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"endpoint\": \"{{node2}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{node1}}/webhook/setupNode",
+					"protocol": "http",
+					"host": [
+						"{{node1}}"
+					],
+					"path": [
+						"webhook",
+						"setupNode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Setup Node2",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"endpoint\": \"{{node2}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{node2}}/webhook/setupNode",
+					"protocol": "http",
+					"host": [
+						"{{node2}}"
+					],
+					"path": [
+						"webhook",
+						"setupNode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Setup Node3",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"endpoint\": \"{{node2}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{node3}}/webhook/setupNode",
+					"protocol": "http",
+					"host": [
+						"{{node3}}"
+					],
+					"path": [
+						"webhook",
+						"setupNode"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Join Node 2 to Node 3 Network",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"endpoint\": \"{{node3}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{node2}}/webhook/joinNetwork",
+					"protocol": "http",
+					"host": [
+						"{{node2}}"
+					],
+					"path": [
+						"webhook",
+						"joinNetwork"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Nodes from Node2",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"endpoint\": \"{{node2}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{node2}}/webhook/getNodes",
+					"protocol": "http",
+					"host": [
+						"{{node2}}"
+					],
+					"path": [
+						"webhook",
+						"getNodes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Nodes from Node3",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"endpoint\": \"{{node2}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{node3}}/webhook/getNodes",
+					"protocol": "http",
+					"host": [
+						"{{node3}}"
+					],
+					"path": [
+						"webhook",
+						"getNodes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Join Node 1 to Node 2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"endpoint\": \"{{node2}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{node1}}/webhook/joinNetwork",
+					"protocol": "http",
+					"host": [
+						"{{node1}}"
+					],
+					"path": [
+						"webhook",
+						"joinNetwork"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Nodes from Node1",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"endpoint\": \"{{node2}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{node1}}/webhook/getNodes",
+					"protocol": "http",
+					"host": [
+						"{{node1}}"
+					],
+					"path": [
+						"webhook",
+						"getNodes"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "node1",
+			"value": "192.168.188.20:52177"
+		},
+		{
+			"key": "node2",
+			"value": "192.168.188.20:52158"
+		},
+		{
+			"key": "node3",
+			"value": "192.168.188.20:55319"
+		}
+	]
+}

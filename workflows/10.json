@@ -1,7 +1,7 @@
 [{
   "id": 10,
   "name": "Synchronize Nodes",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {},
@@ -53,7 +53,7 @@
     },
     {
       "parameters": {
-        "functionCode": "const existingItems = $items(\"Get Nodes Apart From Own\");\nconst ownNode = $items(\"Get Own Node\");\nconst crypto = require('crypto');\nconst items = $items(\"Fetch Remote Nodes\");\n\nconst newItems = [];\nfor (const item of items) {\n  let found = false;\n  for (const existingItem of existingItems) {\n    if (existingItem.endpoint == item.endpoint) {\n      found = true;\n    }\n  }\n  if (found === false && item.endpoint !== ownNode[0].endpoint) {\n    item.name = crypto.createHash('md5').update(item.name).digest(\"hex\");\n    newItems.push(item);\n  }\n}\n\nreturn newItems;"
+        "functionCode": "const existingItems = $items(\"Get Nodes Apart From Own\");\nconst ownNode = $items(\"Get Own Node\");\nconst crypto = require('crypto');\n// const items = $items(\"Fetch Remote Nodes\");\nconst newItems = [];\nfor (const item of items) {\n  for (const node of item.json) {\n    let found = false;\n    for (const existingItem of existingItems) {\n      if (existingItem.json.endpoint === node.endpoint) {\n        found = true;\n      }\n    }\n    if (found === false && node.endpoint !== ownNode[0].json.endpoint) {\n      node.name = crypto.createHash('md5').update(node.name).digest(\"hex\");\n      newItems.push({json: node});\n    }\n  }\n}\n\nreturn newItems;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -95,7 +95,7 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1,
       "position": [
-        1380,
+        1280,
         300
       ],
       "credentials": {
@@ -184,15 +184,10 @@
           }
         ]
       ]
-    },
-    "Get Own Node": {
-      "main": [
-        []
-      ]
     }
   },
   "createdAt": "2021-12-06T13:33:11.370Z",
-  "updatedAt": "2021-12-06T14:15:35.061Z",
+  "updatedAt": "2021-12-08T15:40:22.291Z",
   "settings": {},
   "staticData": null
 }]

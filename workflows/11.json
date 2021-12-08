@@ -27,7 +27,7 @@
     },
     {
       "parameters": {
-        "unit": "hours"
+        "interval": 60
       },
       "name": "Interval",
       "type": "n8n-nodes-base.interval",
@@ -63,7 +63,7 @@
     }
   },
   "createdAt": "2021-12-07T16:43:27.502Z",
-  "updatedAt": "2021-12-08T11:32:58.176Z",
+  "updatedAt": "2021-12-08T14:07:31.677Z",
   "settings": {},
   "staticData": null
 }]

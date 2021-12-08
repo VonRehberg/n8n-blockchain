@@ -31,36 +31,15 @@
     },
     {
       "parameters": {
-        "keepOnlySet": true,
-        "values": {
-          "string": [
-            {
-              "name": "endpoint",
-              "value": "={{$node[\"Webhook\"].json[\"body\"][\"endpoint\"]}}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "name": "Set",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 1,
-      "position": [
-        520,
-        380
-      ]
-    },
-    {
-      "parameters": {
-        "value": "endpoint",
+        "value": "={{$data[\"endpoint\"]}}",
         "dataPropertyName": "name"
       },
       "name": "Crypto",
       "type": "n8n-nodes-base.crypto",
       "typeVersion": 1,
       "position": [
-        760,
-        380
+        1260,
+        520
       ]
     },
     {
@@ -76,8 +55,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1,
       "position": [
-        1000,
-        380
+        1440,
+        520
       ],
       "credentials": {
         "mongoDb": {
@@ -97,8 +76,69 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        1220,
+        1660,
         380
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Find Nodes With Same Endpoint\"].json[\"endpoint\"]}}",
+              "value2": "={{$node[\"Webhook\"].json[\"body\"][\"endpoint\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        980,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "collection": "nodes",
+        "options": {},
+        "query": "={\"endpoint\": \"{{$node[\"Webhook\"].json[\"body\"][\"endpoint\"]}}\"}"
+      },
+      "name": "Find Nodes With Same Endpoint",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        740,
+        380
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "endpoint",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"endpoint\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        520
       ]
     }
   ],
@@ -107,18 +147,7 @@
       "main": [
         [
           {
-            "node": "Set",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Set": {
-      "main": [
-        [
-          {
-            "node": "Crypto",
+            "node": "Find Nodes With Same Endpoint",
             "type": "main",
             "index": 0
           }
@@ -146,10 +175,50 @@
           }
         ]
       ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Nodes With Same Endpoint": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Crypto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2021-12-05T21:31:54.102Z",
-  "updatedAt": "2021-12-05T21:38:19.203Z",
+  "updatedAt": "2021-12-08T13:51:44.099Z",
   "settings": {},
   "staticData": null
 }]

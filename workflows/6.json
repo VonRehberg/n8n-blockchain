@@ -117,7 +117,7 @@
     },
     {
       "parameters": {
-        "value": "endpoint",
+        "value": "={{$data[\"endpoint\"]}}",
         "dataPropertyName": "name"
       },
       "name": "Crypto",
@@ -196,16 +196,6 @@
             "node": "Delete Nodes Except Own",
             "type": "main",
             "index": 0
-          },
-          {
-            "node": "Delete All Blocks",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Delete Identities Except Own",
-            "type": "main",
-            "index": 0
           }
         ]
       ]
@@ -254,16 +244,11 @@
         ]
       ]
     },
-    "Insert Node": {
-      "main": [
-        []
-      ]
-    },
     "Delete Nodes Except Own": {
       "main": [
         [
           {
-            "node": "Get Own Node",
+            "node": "Delete Identities Except Own",
             "type": "main",
             "index": 0
           }
@@ -274,7 +259,7 @@
       "main": [
         [
           {
-            "node": "Get Own Node",
+            "node": "Delete All Blocks",
             "type": "main",
             "index": 0
           }
@@ -291,10 +276,15 @@
           }
         ]
       ]
+    },
+    "Insert Node": {
+      "main": [
+        []
+      ]
     }
   },
   "createdAt": "2021-12-05T21:07:47.673Z",
-  "updatedAt": "2021-12-06T13:20:23.402Z",
+  "updatedAt": "2021-12-08T15:41:46.562Z",
   "settings": {},
   "staticData": null
 }]

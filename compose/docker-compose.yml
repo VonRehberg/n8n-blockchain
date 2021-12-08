@@ -42,7 +42,7 @@ services:
       - NODE_FUNCTION_ALLOW_EXTERNAL=uuid
       - NODE_FUNCTION_ALLOW_BUILTIN=crypto
     ports:
-      - 5678:5678
+      - 5678
     links:
       - postgres
       - mongodb:mongo
