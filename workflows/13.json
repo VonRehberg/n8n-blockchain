@@ -31,7 +31,7 @@
     },
     {
       "parameters": {
-        "functionCode": "var crypto = require('crypto');\nreturn items.map((item) => {\n  const result = {\n    json: {\n      data: item.json.body ? item.json.body.data : item.json.data,\n      publicKey: item.json.body ? item.json.body.publicKey : item.json.publicKey,\n      signature: item.json.body ? item.json.body.signature : item.json.signature,\n    }\n  };\n  const verifier = crypto.createVerify(\"id-rsassa-pkcs1-v1_5-with-sha3-256\");\n  verifier.update(JSON.stringify(result.json.data), 'utf8');\n  result.json.isValid = verifier.verify(Buffer.from(result.json.publicKey, 'utf8'), Buffer.from(result.json.signature, 'hex'));\n  return result;\n});\n"
+        "functionCode": "var crypto = require('crypto');\nreturn items.map((item) => {\n  const result = {\n    json: {\n      data: item.json.body ? item.json.body.data : item.json.data,\n      publicKey: item.json.body ? item.json.body.publicKey : item.json.publicKey,\n      signature: item.json.body ? item.json.body.signature : item.json.signature,\n      author: item.json.body ? item.json.body.author: item.json.author,\n    }\n  };\n  const verifier = crypto.createVerify(\"id-rsassa-pkcs1-v1_5-with-sha3-256\");\n  verifier.update(JSON.stringify(result.json.data), 'utf8');\n  result.json.isValid = verifier.verify(Buffer.from(result.json.publicKey, 'utf8'), Buffer.from(result.json.signature, 'hex'));\n  return result;\n});\n"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -46,8 +46,14 @@
         "conditions": {
           "boolean": [
             {
-              "value1": "={{$json[\"isValid\"]}}",
+              "value1": "={{$node[\"Function\"].json[\"isValid\"]}}",
               "value2": true
+            }
+          ],
+          "string": [
+            {
+              "value1": "={{$node[\"Fetch Identity\"].json[\"publicKey\"]}}",
+              "value2": "={{$node[\"Webhook\"].json[\"body\"][\"publicKey\"]}}"
             }
           ]
         }
@@ -58,7 +64,8 @@
       "position": [
         760,
         320
-      ]
+      ],
+      "executeOnce": true
     },
     {
       "parameters": {
@@ -93,7 +100,7 @@
       "parameters": {
         "operation": "insert",
         "collection": "currentTransactions",
-        "fields": "data, publicKey, signature",
+        "fields": "data, publicKey, signature, author",
         "options": {}
       },
       "name": "Insert Into Current Transactions",
@@ -109,6 +116,27 @@
           "name": "MongoDB account"
         }
       }
+    },
+    {
+      "parameters": {
+        "collection": "identities",
+        "options": {},
+        "query": "={\"name\": \"{{$node[\"Webhook\"].json[\"body\"][\"author\"]}}\"}"
+      },
+      "name": "Fetch Identity",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        500,
+        200
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
     }
   ],
   "connections": {
@@ -117,6 +145,11 @@
         [
           {
             "node": "Function",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Identity",
             "type": "main",
             "index": 0
           }
@@ -170,13 +203,23 @@
             "node": "Function",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Fetch Identity",
+            "type": "main",
+            "index": 0
           }
         ]
+      ]
+    },
+    "Fetch Identity": {
+      "main": [
+        []
       ]
     }
   },
   "createdAt": "2021-12-08T16:20:53.661Z",
-  "updatedAt": "2021-12-08T17:38:14.263Z",
+  "updatedAt": "2021-12-08T21:21:31.777Z",
   "settings": {},
   "staticData": null
 }]

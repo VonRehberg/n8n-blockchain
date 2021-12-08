@@ -206,6 +206,10 @@
             {
               "name": "publicKey",
               "value": "={{$json[\"publicKey\"]}}"
+            },
+            {
+              "name": "author",
+              "value": "={{$json[\"name\"]}}"
             }
           ]
         },
@@ -352,7 +356,7 @@
     }
   },
   "createdAt": "2021-12-08T15:58:02.869Z",
-  "updatedAt": "2021-12-08T16:45:47.419Z",
+  "updatedAt": "2021-12-08T20:59:41.641Z",
   "settings": {},
   "staticData": null
 }]

@@ -18,7 +18,7 @@
         "collection": "blocks",
         "options": {
           "limit": 1,
-          "sort": "{\"number\": 1}"
+          "sort": "{\"number\": -1}"
         }
       },
       "name": "Get Last Block",
@@ -37,7 +37,7 @@
     },
     {
       "parameters": {
-        "path": "getMetadataOfLastBlock",
+        "path": "getLastBlock",
         "responseMode": "responseNode",
         "options": {}
       },
@@ -52,8 +52,6 @@
     },
     {
       "parameters": {
-        "respondWith": "json",
-        "responseBody": "={\"number\": {{$json[\"number\"]}}, \"hash\": \"{{$json[\"hash\"]}}\"}",
         "options": {}
       },
       "name": "Respond to Webhook",
@@ -101,7 +99,7 @@
     }
   },
   "createdAt": "2021-12-08T16:20:53.670Z",
-  "updatedAt": "2021-12-08T18:58:02.755Z",
+  "updatedAt": "2021-12-08T21:24:06.939Z",
   "settings": {},
   "staticData": null
 }]

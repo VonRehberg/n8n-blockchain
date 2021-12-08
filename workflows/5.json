@@ -53,7 +53,7 @@
     },
     {
       "parameters": {
-        "functionCode": "var crypto = require('crypto');\nreturn items.map((item) => {\n  var result = {\n    json: {}\n  };\n  \n  result.json.payload = item.json.payload;\n  result.json.signature = crypto.sign(crypto.RSASSA_PKCS1_SHA256, Buffer.from(JSON.stringify(item.json.payload), 'utf8'), item.json.privateKey).toString('hex');\n  result.json.hash = crypto.createHash('sha512').update(JSON.stringify(item.json.payload) + (item.json.previousHash ? item.json.previousHash : '')).digest(\"hex\");\n  result.json.createdAt = new Date();\n  result.json.publicKey = item.json.publicKey;\n  return result;\n});"
+        "functionCode": "var crypto = require('crypto');\nreturn items.map((item) => {\n  var result = {\n    json: {}\n  };\n  \n  result.json.number = item.json.number;\n  result.json.payload = item.json.payload;\n  result.json.signature = crypto.sign(crypto.RSASSA_PKCS1_SHA256, Buffer.from(JSON.stringify(item.json.payload), 'utf8'), item.json.privateKey).toString('hex');\n  result.json.hash = crypto.createHash('sha512').update(JSON.stringify(item.json.payload) + (item.json.previousHash ? item.json.previousHash : '')).digest(\"hex\");\n  result.json.createdAt = new Date();\n  result.json.publicKey = item.json.publicKey;\n  return result;\n});"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -134,7 +134,7 @@
     }
   },
   "createdAt": "2021-12-05T15:52:56.944Z",
-  "updatedAt": "2021-12-06T14:04:31.009Z",
+  "updatedAt": "2021-12-08T20:40:04.051Z",
   "settings": {},
   "staticData": null
 }]

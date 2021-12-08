@@ -1,7 +1,7 @@
 [{
   "id": 15,
   "name": "Mine new Block",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {},
@@ -90,7 +90,7 @@
       "parameters": {
         "operation": "insert",
         "collection": "blocks",
-        "fields": "payload, signature, hash, createdAt, publicKey",
+        "fields": "payload, signature, hash, createdAt, publicKey, number",
         "options": {}
       },
       "name": "Insert Block",
@@ -196,7 +196,7 @@
     }
   },
   "createdAt": "2021-12-08T18:59:01.111Z",
-  "updatedAt": "2021-12-08T20:26:40.494Z",
+  "updatedAt": "2021-12-08T20:46:37.638Z",
   "settings": {},
   "staticData": null
 }]

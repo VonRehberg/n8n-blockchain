@@ -41,6 +41,7 @@ services:
       - N8N_BASIC_AUTH_PASSWORD
       - NODE_FUNCTION_ALLOW_EXTERNAL=uuid
       - NODE_FUNCTION_ALLOW_BUILTIN=crypto
+      - EXECUTIONS_PROCESS=main
     ports:
       - 5678
     links:

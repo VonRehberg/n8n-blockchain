@@ -28,3 +28,11 @@ docker-compose -p node3 up -d
 docker-compose -p node1 ps
 docker-compose -p node2 ps
 docker-compose -p node3 ps
+
+docker-compose -p node1 stop
+docker-compose -p node2 stop
+docker-compose -p node3 stop
+
+docker-compose -p node1 rm
+docker-compose -p node2 rm
+docker-compose -p node3 rm
