@@ -1,4 +1,4 @@
-{
+[{
   "id": 6,
   "name": "Join Network",
   "active": true,
@@ -297,4 +297,4 @@
   "updatedAt": "2021-12-06T13:20:23.402Z",
   "settings": {},
   "staticData": null
-}
+}]

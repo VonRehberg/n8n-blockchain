@@ -1,4 +1,4 @@
-{
+[{
   "id": 2,
   "name": "Setup New Blockchain Node",
   "active": true,
@@ -431,4 +431,4 @@
   "updatedAt": "2021-12-05T21:29:42.697Z",
   "settings": {},
   "staticData": null
-}
+}]

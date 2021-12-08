@@ -1,4 +1,4 @@
-{
+[{
   "id": 1,
   "name": "Create new Private Public Key Pair",
   "active": true,
@@ -69,4 +69,4 @@
   "updatedAt": "2021-12-05T20:55:43.438Z",
   "settings": {},
   "staticData": null
-}
+}]

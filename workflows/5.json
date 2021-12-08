@@ -1,4 +1,4 @@
-{
+[{
   "id": 5,
   "name": "Sign And Hash Block",
   "active": true,
@@ -137,4 +137,4 @@
   "updatedAt": "2021-12-06T14:04:31.009Z",
   "settings": {},
   "staticData": null
-}
+}]

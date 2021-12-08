@@ -1,4 +1,4 @@
-{
+[{
   "id": 3,
   "name": "Check If Node Is Setup",
   "active": true,
@@ -218,4 +218,4 @@
   "updatedAt": "2021-12-05T15:14:25.624Z",
   "settings": {},
   "staticData": null
-}
+}]

@@ -1,4 +1,4 @@
-{
+[{
   "id": 8,
   "name": "Get Nodes",
   "active": true,
@@ -66,4 +66,4 @@
   "updatedAt": "2021-12-05T21:40:39.588Z",
   "settings": {},
   "staticData": null
-}
+}]

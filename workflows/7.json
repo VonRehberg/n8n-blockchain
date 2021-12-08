@@ -1,4 +1,4 @@
-{
+[{
   "id": 7,
   "name": "Add Node",
   "active": true,
@@ -152,4 +152,4 @@
   "updatedAt": "2021-12-05T21:38:19.203Z",
   "settings": {},
   "staticData": null
-}
+}]

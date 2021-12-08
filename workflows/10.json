@@ -1,4 +1,4 @@
-{
+[{
   "id": 10,
   "name": "Synchronize Nodes",
   "active": false,
@@ -195,4 +195,4 @@
   "updatedAt": "2021-12-06T14:15:35.061Z",
   "settings": {},
   "staticData": null
-}
+}]

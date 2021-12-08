@@ -1,4 +1,4 @@
-{
+[{
   "id": 9,
   "name": "Create UUID",
   "active": true,
@@ -58,4 +58,4 @@
   "updatedAt": "2021-12-05T22:11:10.560Z",
   "settings": {},
   "staticData": null
-}
+}]
