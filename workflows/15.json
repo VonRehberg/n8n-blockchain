@@ -1,0 +1,202 @@
+[{
+  "id": 15,
+  "name": "Mine new Block",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        240,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "collection": "currentTransactions",
+        "options": {}
+      },
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        680,
+        400
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Code here will run only once, no matter how many input items there are.\n// More info and help: https://docs.n8n.io/nodes/n8n-nodes-base.function\nconst previousHash = $items(\"Get Metadata of Previous Block\")[0].json.hash;\nconst number= $items(\"Get Metadata of Previous Block\")[0].json.number + 1;\n// Loop over inputs and add a new field called 'myNewField' to the JSON of each one\nconst transactions= [];\nfor (item of items) {\n  delete item.json._id;\n  transactions.push(item.json);\n}\n\nreturn [{json: {payload: {transactions: transactions}, previousHash: previousHash, number: number}}];\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "14"
+      },
+      "name": "Get Metadata of Previous Block",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        480,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "5"
+      },
+      "name": "Sign and Hash Block",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "blocks",
+        "fields": "payload, signature, hash, createdAt, publicKey",
+        "options": {}
+      },
+      "name": "Insert Block",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        400
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "currentTransactions"
+      },
+      "name": "Delete Current Transactions",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        400
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Get Metadata of Previous Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Sign and Hash Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Metadata of Previous Block": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sign and Hash Block": {
+      "main": [
+        [
+          {
+            "node": "Insert Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Block": {
+      "main": [
+        [
+          {
+            "node": "Delete Current Transactions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-08T18:59:01.111Z",
+  "updatedAt": "2021-12-08T20:26:40.494Z",
+  "settings": {},
+  "staticData": null
+}]

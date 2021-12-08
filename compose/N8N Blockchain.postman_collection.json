@@ -246,6 +246,93 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Create Identity",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\": \"joschi12\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{node3}}/webhook/createIdentity",
+					"protocol": "http",
+					"host": [
+						"{{node3}}"
+					],
+					"path": [
+						"webhook",
+						"createIdentity"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create new Transaction",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"data\": {\r\n\"type\": \"newIdentity\",\r\n\"name\": \"joschi6\"\r\n},\r\n\"publicKey\": \"-----BEGIN PUBLIC KEY-----\\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAv5KcMq+s1YiSJSala8Bz\\n4J0wPdseNMdBDh80i7w8DU9X2xOq9bm+R6sWh9rHfIXRPGRFsbfZDqXIB1dj3Ur8\\nMNd3d0CK5lqpiGdCUGWD6giRaiZv8VY0yqQoFZoZZCWWwAskt2nnKzHch1Sl9x6B\\nnbifFGUD4ISniTIomAsRFrhYLG3QrT75Lv1A1rR6tGRFMFYVhM2HVpNZzq9fEn+8\\ntp4G6//mPIknFLgVtn72SUsrH7ZQdElVGMA5D9Hl3aWv9/Q7UvLuV8iYDGnivLJ/\\nYFXd+uJXnBKesJL12NClF80qzNHmILLeW6wtVbvwn+ZfgT3CbHqh7qurrt1f2eI+\\n6l7R3z0W49MT7JoR789lpt7DOAA3UksW6rWzBKvHQ2/Yxr7HmAPwo3pQEZlN8T59\\nsOy4qXoGPJd8ClJF42E2ZGvQ8DK7SHkdEWg4ms09UE1Z6c/tT8Mq+qzKlWRdcetX a0p5YSHq5VjYHblCZRKZBKC+xvl3ZhYZat2R+N9X6hQn+FqKeolyYVAkhr1UIEaP\\nGu7ndtOjJDrBxTgrCSqIyCaEptl+C+CNAbdxdW8Owkn63bg//1VNTY94GxNiAPus wy1mJ5OlLBlC5p6WYjsTZ+jZEBWjvHSwNbB7oIsz2c2OIi3hgEpoJEcA2u/Ju+ry\\n3Eioc9o1JexjGFr7E+k9Jp0CAwEAAQ==\\n-----END PUBLIC KEY----- \",\r\n\"signature\": \"6d4916754e3af58779352ffb1f4e4959c940f6e102b544d0424f8f21ffb280777de6716d4c8f9d9af884f8deb6be55ceeff6636bcb482580f504cd80ceeceb9969cc5611c02acf0ba6194dbbbcdfbdda5771083f5ed59178b4a7dac2b241c917aa1b94a3f316cbdb8c2474bd2843e0463e9fbee67a8f24c5c479cd1fc3bbe4cfeb5977defc6701c790091eed7b09b3172d4edf946cd3878e23f5ae13b48b0cd1d708466a202076835483cf4dbe5e0bd6d1de88c590ddd092b20085e4977dc623252b5f8b85eee121e413778caa1856addac7970f67fbf0f70362c3b1dd0bb41e99c105ff2ead7f4f92779fd7fdeeb52a5c6022849461b4674cafb79447e4676627380fc698629aff53288a5afc402160f91d109c8c4d92ef4d4dd535e9a36daa57016f8996e5556a1da461b2be0ed9c4ab76d98ceaa8534f8846d66921dcc38aa6c203eba57ac847dfc9f451c1e10d66ae7f557cabd36ca48c2635ef581199e7860e21532e9c3cf7198a80e747e407fc336b773c2e62754521527e8da8a366d486f6e5c61887be6e984ca54ac9b7ecabef66dd3af2e57b6057a1f13fe7f91ea1834dccbbbf277a48ebc144d1600cebdf702c572ab9fcbc8ab7dea682160a805eeb9888e0f31f3d96978adf888bafe7c1cfed334afd6277530dd4ff2d11b9c6315814f86876a097dbbb1267a37b4eff1ced2c39dff82d3a595af9d466e240fdf2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{node3}}/webhook/createTransaction",
+					"protocol": "http",
+					"host": [
+						"{{node3}}"
+					],
+					"path": [
+						"webhook",
+						"createTransaction"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Metadata of Last Block",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"endpoint\": \"{{node2}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{node3}}/webhook/getMetadataOfLastBlock",
+					"protocol": "http",
+					"host": [
+						"{{node3}}"
+					],
+					"path": [
+						"webhook",
+						"getMetadataOfLastBlock"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
