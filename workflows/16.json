@@ -1,0 +1,22 @@
+[{
+  "id": 16,
+  "name": "Fetch All Blocks",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        220,
+        260
+      ]
+    }
+  ],
+  "connections": {},
+  "createdAt": "2021-12-08T21:41:04.719Z",
+  "updatedAt": "2021-12-08T21:55:19.378Z",
+  "settings": {},
+  "staticData": null
+}]

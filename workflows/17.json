@@ -1,0 +1,269 @@
+[{
+  "id": 17,
+  "name": "Get Blocks Paginated",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "path": "getBlocksPaginated",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        500
+      ],
+      "webhookId": "6dc00d04-ee43-4ac1-8e1b-9602e5eead17"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Webhook\"].json[\"query\"][\"top\"]}}",
+              "operation": "larger"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        560,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "top",
+              "value": "={{parseInt($node[\"Webhook\"].json[\"query\"][\"top\"])}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set Top From Query",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        800,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "top",
+              "value": 100
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set top to 100",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        800,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Webhook\"].json[\"query\"][\"skip\"]}}",
+              "operation": "larger"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "skip",
+              "value": "={{parseInt($node[\"Webhook\"].json[\"query\"][\"skip\"])}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set Skip From Query",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "skip"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "collection": "blocks",
+        "options": {
+          "limit": "={{$data[\"top\"]}}",
+          "skip": "={{$data[\"skip\"]}}"
+        }
+      },
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        520
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Set Top From Query",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set top to 100",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Top From Query": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set top to 100": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "Set Skip From Query",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Skip From Query": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-08T21:41:04.733Z",
+  "updatedAt": "2021-12-08T22:06:50.296Z",
+  "settings": {},
+  "staticData": null
+}]
