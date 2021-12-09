@@ -100,13 +100,14 @@
     {
       "parameters": {
         "operation": "delete",
-        "collection": "currentTransactions"
+        "collection": "currentTransactions",
+        "query": "={{$json[\"query\"]}}"
       },
       "name": "Delete Current Transactions",
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1,
       "position": [
-        2720,
+        2940,
         240
       ],
       "credentials": {
@@ -232,8 +233,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1,
       "position": [
-        2920,
-        400
+        3220,
+        380
       ],
       "credentials": {
         "mongoDb": {
@@ -261,7 +262,19 @@
         1820,
         380
       ],
-      "executeOnce": true
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "functionCode": "return [{\n            json: {\n                query: \"{\\\"signature\\\": {\\\"$in\\\": [\" + $items(\"MongoDB\").map(function (item) { return \"\\\"\" + item.json.signature + \"\\\"\"; }).join(\",\") + \"]}}\"\n            }\n        }\n    ];"
+      },
+      "name": "Function1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2740,
+        240
+      ]
     }
   ],
   "connections": {
@@ -313,7 +326,7 @@
       "main": [
         [
           {
-            "node": "Delete Current Transactions",
+            "node": "Function1",
             "type": "main",
             "index": 0
           }
@@ -415,10 +428,21 @@
           }
         ]
       ]
+    },
+    "Function1": {
+      "main": [
+        [
+          {
+            "node": "Delete Current Transactions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2021-12-08T18:59:01.111Z",
-  "updatedAt": "2021-12-09T17:32:14.372Z",
+  "updatedAt": "2021-12-09T21:32:18.697Z",
   "settings": {},
   "staticData": null
 }]
