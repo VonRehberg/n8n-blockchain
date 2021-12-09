@@ -120,7 +120,7 @@
     },
     {
       "parameters": {
-        "functionCode": "return [ {json: {\n    payload: {\n      transactions: []\n    }\n  }}\n];"
+        "functionCode": "var crypto = require('crypto');\nconst payload = {\n      transactions: [],\n      createdAt: new Date(),\n    };\nreturn [ {json: {\n    payload: payload,\n    hash: crypto.createHash('sha256').update(JSON.stringify(payload)).digest(\"hex\"),\n  }}\n];"
       },
       "name": "Set Genesis Block Data",
       "type": "n8n-nodes-base.function",
@@ -428,7 +428,7 @@
     }
   },
   "createdAt": "2021-12-05T10:13:18.678Z",
-  "updatedAt": "2021-12-05T21:29:42.697Z",
+  "updatedAt": "2021-12-09T14:49:38.674Z",
   "settings": {},
   "staticData": null
 }]

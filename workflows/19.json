@@ -1,0 +1,62 @@
+[{
+  "id": 19,
+  "name": "Compute Hash",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "type": "SHA256",
+        "value": "={{$data[\"number\"]}}{{$data[\"previousHash\"]}}{{$data[\"createdAt\"]}}{{JSON.stringify($data[\"payload\"])}}{{$data[\"nonce\"]}}",
+        "dataPropertyName": "hash"
+      },
+      "name": "Crypto",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "path": "ea0511bb-9364-4c28-858f-a2c45713d5ad",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        500
+      ],
+      "webhookId": "ea0511bb-9364-4c28-858f-a2c45713d5ad"
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Crypto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-09T11:03:44.741Z",
+  "updatedAt": "2021-12-09T14:04:47.803Z",
+  "settings": {},
+  "staticData": null
+}]

@@ -10,7 +10,7 @@
       "typeVersion": 1,
       "position": [
         240,
-        300
+        240
       ]
     },
     {
@@ -40,9 +40,10 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1,
       "position": [
-        680,
-        400
+        1620,
+        380
       ],
+      "alwaysOutputData": true,
       "credentials": {
         "mongoDb": {
           "id": "1",
@@ -52,14 +53,14 @@
     },
     {
       "parameters": {
-        "functionCode": "// Code here will run only once, no matter how many input items there are.\n// More info and help: https://docs.n8n.io/nodes/n8n-nodes-base.function\nconst previousHash = $items(\"Get Metadata of Previous Block\")[0].json.hash;\nconst number= $items(\"Get Metadata of Previous Block\")[0].json.number + 1;\n// Loop over inputs and add a new field called 'myNewField' to the JSON of each one\nconst transactions= [];\nfor (item of items) {\n  delete item.json._id;\n  transactions.push(item.json);\n}\n\nreturn [{json: {payload: {transactions: transactions}, previousHash: previousHash, number: number}}];\n"
+        "functionCode": "// Code here will run only once, no matter how many input items there are.\n// More info and help: https://docs.n8n.io/nodes/n8n-nodes-base.function\nconst previousHash = $items(\"Get Metadata of Previous Block\")[0].json.hash;\nconst number= $items(\"Get Metadata of Previous Block\")[0].json.number + 1;\n// Loop over inputs and add a new field called 'myNewField' to the JSON of each one\nconst transactions= [];\nfor (item of items) {\n  delete item.json._id;\n  transactions.push(item.json);\n}\n\nreturn [{json: {payload: {transactions: transactions}, previousHash: previousHash, number: number, createdAt: new Date()}}];\n"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        900,
-        400
+        2040,
+        240
       ]
     },
     {
@@ -70,35 +71,24 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1,
       "position": [
-        480,
-        400
-      ]
-    },
-    {
-      "parameters": {
-        "workflowId": "5"
-      },
-      "name": "Sign and Hash Block",
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1,
-      "position": [
-        1100,
-        400
-      ]
+        1420,
+        380
+      ],
+      "alwaysOutputData": true
     },
     {
       "parameters": {
         "operation": "insert",
         "collection": "blocks",
-        "fields": "payload, signature, hash, createdAt, publicKey, number",
+        "fields": "payload, signature, hash, createdAt, publicKey, number, nonce, previousHash",
         "options": {}
       },
       "name": "Insert Block",
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1,
       "position": [
-        1320,
-        400
+        2560,
+        240
       ],
       "credentials": {
         "mongoDb": {
@@ -116,7 +106,133 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1,
       "position": [
-        1540,
+        2720,
+        240
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": "5"
+      },
+      "name": "Sign Block",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        2380,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "18"
+      },
+      "name": "Proof of Work",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "collection": "runningOperations",
+        "options": {},
+        "query": "{\"type\": \"mining\"}"
+      },
+      "name": "Find Running Mining Operations",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        500,
+        360
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$data[\"type\"]}}",
+              "value2": "mining"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        740,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "type",
+              "value": "mining"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        940,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "runningOperations",
+        "fields": "type",
+        "options": {}
+      },
+      "name": "Set mining running",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        380
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "runningOperations",
+        "query": "{\"type\": \"mining\"}"
+      },
+      "name": "Remove Mining Lock",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        2920,
         400
       ],
       "credentials": {
@@ -125,6 +241,27 @@
           "name": "MongoDB account"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [],
+          "boolean": [
+            {
+              "value1": "={{$data[\"data\"]!==undefined}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Check Transactions Exist",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        380
+      ],
+      "executeOnce": true
     }
   ],
   "connections": {
@@ -132,7 +269,7 @@
       "main": [
         [
           {
-            "node": "Get Metadata of Previous Block",
+            "node": "Find Running Mining Operations",
             "type": "main",
             "index": 0
           }
@@ -143,7 +280,7 @@
       "main": [
         [
           {
-            "node": "Function",
+            "node": "Check Transactions Exist",
             "type": "main",
             "index": 0
           }
@@ -154,7 +291,7 @@
       "main": [
         [
           {
-            "node": "Sign and Hash Block",
+            "node": "Proof of Work",
             "type": "main",
             "index": 0
           }
@@ -172,17 +309,6 @@
         ]
       ]
     },
-    "Sign and Hash Block": {
-      "main": [
-        [
-          {
-            "node": "Insert Block",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Insert Block": {
       "main": [
         [
@@ -193,10 +319,106 @@
           }
         ]
       ]
+    },
+    "Sign Block": {
+      "main": [
+        [
+          {
+            "node": "Insert Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Proof of Work": {
+      "main": [
+        [
+          {
+            "node": "Sign Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Running Mining Operations": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Set mining running",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set mining running": {
+      "main": [
+        [
+          {
+            "node": "Get Metadata of Previous Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Current Transactions": {
+      "main": [
+        [
+          {
+            "node": "Remove Mining Lock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Transactions Exist": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Remove Mining Lock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2021-12-08T18:59:01.111Z",
-  "updatedAt": "2021-12-08T20:46:37.638Z",
+  "updatedAt": "2021-12-09T17:32:14.372Z",
   "settings": {},
   "staticData": null
 }]
