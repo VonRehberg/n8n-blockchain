@@ -79,26 +79,6 @@
     },
     {
       "parameters": {
-        "operation": "delete",
-        "collection": "runningOperations",
-        "query": "{\"type\": \"checkNetwork\"}"
-      },
-      "name": "MongoDB1",
-      "type": "n8n-nodes-base.mongoDb",
-      "typeVersion": 1,
-      "position": [
-        1440,
-        680
-      ],
-      "credentials": {
-        "mongoDb": {
-          "id": "1",
-          "name": "MongoDB account"
-        }
-      }
-    },
-    {
-      "parameters": {
         "collection": "nodes",
         "options": {},
         "query": "{\"name\": {\"$ne\": \"me\"}}"
@@ -120,7 +100,10 @@
     {
       "parameters": {
         "url": "=http://{{$data[\"endpoint\"]}}/webhook/getLastBlock",
-        "options": {}
+        "options": {},
+        "headerParametersUi": {
+          "parameter": []
+        }
       },
       "name": "Fetch Last Block",
       "type": "n8n-nodes-base.httpRequest",
@@ -142,16 +125,134 @@
         1180,
         80
       ],
-      "alwaysOutputData": false
+      "alwaysOutputData": true
     },
     {
-      "parameters": {},
+      "parameters": {
+        "functionCode": "const ownLastBlockHash = $items(\"Get Own Last Block\")[0].json.hash;\nconst ownLastBlockNumber = $items(\"Get Own Last Block\")[0].json.number;\nconst hasOwnBlock = !ownLastBlockHash && !ownLastBlockNumber ? false : true;\nconst nodesApartFromOwn = $items(\"Get Nodes Apart From Own\");\nconst lastBlocks = $items(\"Fetch Last Block\").map(function(item) {\n  return {\n    json: {\n      block: item.json,\n      node: nodesApartFromOwn[$items(\"Fetch Last Block\").indexOf(item)].json.endpoint,\n    }\n  };\n});\nlastBlocks.push({\n  json: {\n    endpoint: \"me\",\n    block: $items(\"Get Own Last Block\")[0].json,\n  }\n});\n\nlet maxBlock;\nlet hasConflict = false;\nfor (const lastBlock of lastBlocks) {\n  if (!maxBlock) {\n    maxBlock = lastBlock;\n  }\n  \n  if (!maxBlock.json.block.number || maxBlock.json.block.number && lastBlock.json.block.number && lastBlock.json.block.number > maxBlock.json.block.number) {\n    maxBlock = lastBlock;\n  }\n  if (maxBlock.json.block.number && lastBlock.json.block.number && lastBlock.json.block.number === maxBlock.json.block.number && lastBlock.json.block.hash !== maxBlock.json.block.hash) {\n    hasConflict = true;\n  }\n}\n\nif (hasConflict || maxBlock.json.endpoint=== \"me\") {\n  return [];\n} else {\n  return [maxBlock];\n}\n"
+      },
       "name": "Function",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1400,
+        1420,
         300
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "16"
+      },
+      "name": "Get Blocks From Node",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        300
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "workflowId": "23"
+      },
+      "name": "Check Is Valid Blockchain",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        300
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$data[\"isInvalid\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2060,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "newBlocks"
+      },
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        2340,
+        180
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "runningOperations",
+        "query": "{\"type\": \"checkNetwork\"}"
+      },
+      "name": "Remove Lock",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        2620,
+        300
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "PATCH",
+        "url": "http://nodeworkaround:3000/renameBlocksCollection",
+        "options": {}
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2340,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      },
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        480
       ]
     }
   ],
@@ -210,11 +311,6 @@
             "index": 0
           },
           {
-            "node": "MongoDB1",
-            "type": "main",
-            "index": 0
-          },
-          {
             "node": "Get Own Last Block",
             "type": "main",
             "index": 0
@@ -244,11 +340,84 @@
         ]
       ]
     },
-    "Get Own Last Block": {
+    "Function": {
       "main": [
         [
           {
-            "node": "Function",
+            "node": "Get Blocks From Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Blocks From Node": {
+      "main": [
+        [
+          {
+            "node": "Check Is Valid Blockchain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Is Valid Blockchain": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB": {
+      "main": [
+        [
+          {
+            "node": "Remove Lock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Remove Lock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Set",
             "type": "main",
             "index": 0
           }
@@ -257,7 +426,7 @@
     }
   },
   "createdAt": "2021-12-10T20:45:03.101Z",
-  "updatedAt": "2021-12-11T15:21:42.766Z",
+  "updatedAt": "2021-12-12T21:35:25.356Z",
   "settings": {},
   "staticData": null
 }]

@@ -1,6 +1,6 @@
 [{
   "id": 16,
-  "name": "Fetch All Blocks",
+  "name": "Fetch All Blocks From Node",
   "active": false,
   "nodes": [
     {
@@ -12,11 +12,316 @@
         220,
         260
       ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "top",
+              "value": 2
+            },
+            {
+              "name": "skip",
+              "value": {}
+            }
+          ],
+          "string": [
+            {
+              "name": "endpoint",
+              "value": "192.168.188.20:52923"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set Top and Skip",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        700,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$data.length > 0}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// return [{json: items[0].json[0]},{json: items[0].json[1]}];\nreturn items[0].json.map(function (item) { return {json: item}; });\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=http://{{$data[\"endpoint\"]}}/webhook/getBlocksPaginated?top={{$json[\"top\"]}}&skip={{$json[\"skip\"]}}",
+        "options": {},
+        "headerParametersUi": {
+          "parameter": []
+        }
+      },
+      "name": "Fetch Batch Of Blocks",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        260
+      ],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "endpoint",
+              "value": "={{$node[\"Set Top and Skip\"].json[\"endpoint\"]}}"
+            }
+          ],
+          "number": [
+            {
+              "name": "top",
+              "value": "={{$node[\"Set Top and Skip\"].json[\"top\"]}}"
+            },
+            {
+              "name": "skip",
+              "value": "={{($node[\"Set\"].json[\"skip\"]+$node[\"Set\"].json[\"top\"]) || 2}}"
+            }
+          ],
+          "boolean": []
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        940,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "newBlocks",
+        "fields": "number,hash,previousHash,payload,nonce,createdAt,publicKey,signature",
+        "options": {
+          "dateFields": "createdAt"
+        }
+      },
+      "name": "Insert Into Temp Collection",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        2120,
+        60
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {
+          "reset": "={{$data[\"Reset\"]}}"
+        }
+      },
+      "name": "SplitInBatches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        1940,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "boolean": [
+            {
+              "name": "Reset",
+              "value": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1740,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "newBlocks"
+      },
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        440,
+        260
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
     }
   ],
-  "connections": {},
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Top and Skip": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Set1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Batch Of Blocks": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Fetch Batch Of Blocks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Into Temp Collection": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "SplitInBatches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SplitInBatches": {
+      "main": [
+        [
+          {
+            "node": "Insert Into Temp Collection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set1": {
+      "main": [
+        [
+          {
+            "node": "SplitInBatches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB": {
+      "main": [
+        [
+          {
+            "node": "Set Top and Skip",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "createdAt": "2021-12-08T21:41:04.719Z",
-  "updatedAt": "2021-12-08T21:55:19.378Z",
+  "updatedAt": "2021-12-12T21:28:20.874Z",
   "settings": {},
   "staticData": null
 }]

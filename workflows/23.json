@@ -1,0 +1,223 @@
+[{
+  "id": 23,
+  "name": "Check is Valid Blockchain",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "collection": "newBlocks",
+        "options": {
+          "limit": "={{$data[\"top\"]}}",
+          "skip": "={{$data[\"skip\"]}}",
+          "sort": "{\"number\": 1}"
+        }
+      },
+      "name": "MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        940,
+        300
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "number": [
+            {
+              "name": "top",
+              "value": 2
+            },
+            {
+              "name": "skip",
+              "value": {}
+            }
+          ],
+          "string": []
+        },
+        "options": {}
+      },
+      "name": "Set Top and Skip",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [],
+          "number": [
+            {
+              "name": "top",
+              "value": "={{$node[\"Set Top and Skip\"].json[\"top\"]}}"
+            },
+            {
+              "name": "skip",
+              "value": "={{($node[\"Set\"].json[\"skip\"] + $node[\"Set\"].json[\"top\"] - 1) || 1}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const crypto = require(\"crypto\");\n\nif (!items[1]) {\n  return [{json: {isValid: true}}];\n}\n\nif (crypto.createHash('SHA256').update(items[1].json.number + items[0].json.hash + items[1].json.createdAt + JSON.stringify(items[1].json.payload) + items[1].json.nonce).digest('hex') === items[1].json.hash) {\n  return [{json: {isValid: true}}];\n} else {\n  return [{json: {isValid: false}}];\n}\n"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$data[\"isValid\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "boolean": [
+            {
+              "name": "isInvalid",
+              "value": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set Is Invalid",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        320
+      ]
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Set Top and Skip",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Top and Skip": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Is Invalid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-12T20:22:47.055Z",
+  "updatedAt": "2021-12-12T21:26:05.972Z",
+  "settings": {},
+  "staticData": null
+}]

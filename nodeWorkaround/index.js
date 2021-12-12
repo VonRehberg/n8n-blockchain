@@ -15,7 +15,7 @@ app.patch('/renameBlocksCollection', async (req, res) => {
         });
         await client.connect();
         const db = client.db("blockchain");
-        await db.renameCollection('newBlocks', 'blocks');
+        await db.renameCollection('newBlocks', 'blocks', {dropTarget: true});
         res.status(201).send();
     } catch (e) {
         res.status(500).send({message: e.message});

@@ -152,7 +152,7 @@
         "options": {
           "limit": "={{$data[\"top\"]}}",
           "skip": "={{$data[\"skip\"]}}",
-          "sort": "{\"number\": -1}"
+          "sort": "{\"number\": 1}"
         }
       },
       "name": "MongoDB",
@@ -264,7 +264,7 @@
     }
   },
   "createdAt": "2021-12-08T21:41:04.733Z",
-  "updatedAt": "2021-12-11T13:17:48.878Z",
+  "updatedAt": "2021-12-12T19:14:57.332Z",
   "settings": {},
   "staticData": null
 }]
