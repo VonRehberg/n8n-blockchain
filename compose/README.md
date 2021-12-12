@@ -21,9 +21,9 @@ The default name of the database, user and password for PostgreSQL can be change
 
 ## Spinning up multiple nodes
 
-docker-compose -p node1 up -d
-docker-compose -p node2 up -d
-docker-compose -p node3 up -d
+docker-compose -p node1 up -t 20 -d
+docker-compose -p node2 up -t 20 -d
+docker-compose -p node3 up -t 20 -d
 
 docker-compose -p node1 ps
 docker-compose -p node2 ps

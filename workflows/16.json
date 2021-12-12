@@ -15,7 +15,6 @@
     },
     {
       "parameters": {
-        "keepOnlySet": true,
         "values": {
           "number": [
             {
@@ -30,7 +29,7 @@
           "string": [
             {
               "name": "endpoint",
-              "value": "192.168.188.20:52923"
+              "value": "={{$node[\"Start\"].json[\"endpoint\"]}}"
             }
           ]
         },
@@ -321,7 +320,7 @@
     }
   },
   "createdAt": "2021-12-08T21:41:04.719Z",
-  "updatedAt": "2021-12-12T21:28:20.874Z",
+  "updatedAt": "2021-12-12T22:20:23.705Z",
   "settings": {},
   "staticData": null
 }]

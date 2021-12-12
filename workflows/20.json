@@ -1,7 +1,7 @@
 [{
   "id": 20,
   "name": "Check Network For New Blocks",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {},
@@ -90,6 +90,7 @@
         940,
         300
       ],
+      "alwaysOutputData": true,
       "credentials": {
         "mongoDb": {
           "id": "1",
@@ -109,7 +110,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        1180,
+        1460,
         300
       ],
       "alwaysOutputData": false
@@ -129,15 +130,16 @@
     },
     {
       "parameters": {
-        "functionCode": "const ownLastBlockHash = $items(\"Get Own Last Block\")[0].json.hash;\nconst ownLastBlockNumber = $items(\"Get Own Last Block\")[0].json.number;\nconst hasOwnBlock = !ownLastBlockHash && !ownLastBlockNumber ? false : true;\nconst nodesApartFromOwn = $items(\"Get Nodes Apart From Own\");\nconst lastBlocks = $items(\"Fetch Last Block\").map(function(item) {\n  return {\n    json: {\n      block: item.json,\n      node: nodesApartFromOwn[$items(\"Fetch Last Block\").indexOf(item)].json.endpoint,\n    }\n  };\n});\nlastBlocks.push({\n  json: {\n    endpoint: \"me\",\n    block: $items(\"Get Own Last Block\")[0].json,\n  }\n});\n\nlet maxBlock;\nlet hasConflict = false;\nfor (const lastBlock of lastBlocks) {\n  if (!maxBlock) {\n    maxBlock = lastBlock;\n  }\n  \n  if (!maxBlock.json.block.number || maxBlock.json.block.number && lastBlock.json.block.number && lastBlock.json.block.number > maxBlock.json.block.number) {\n    maxBlock = lastBlock;\n  }\n  if (maxBlock.json.block.number && lastBlock.json.block.number && lastBlock.json.block.number === maxBlock.json.block.number && lastBlock.json.block.hash !== maxBlock.json.block.hash) {\n    hasConflict = true;\n  }\n}\n\nif (hasConflict || maxBlock.json.endpoint=== \"me\") {\n  return [];\n} else {\n  return [maxBlock];\n}\n"
+        "functionCode": "const ownLastBlockHash = $items(\"Get Own Last Block\")[0].json.hash;\nconst ownLastBlockNumber = $items(\"Get Own Last Block\")[0].json.number;\nconst hasOwnBlock = !ownLastBlockHash && !ownLastBlockNumber ? false : true;\nconst nodesApartFromOwn = $items(\"Get Nodes Apart From Own\");\nconst lastBlocks = $items(\"Fetch Last Block\").map(function(item) {\n  return {\n    json: {\n      block: item.json,\n      endpoint: nodesApartFromOwn[$items(\"Fetch Last Block\").indexOf(item)].json.endpoint,\n    }\n  };\n});\nlastBlocks.push({\n  json: {\n    endpoint: \"me\",\n    block: $items(\"Get Own Last Block\")[0].json,\n  }\n});\n\nlet maxBlock;\nlet hasConflict = false;\nfor (const lastBlock of lastBlocks) {\n  if (!maxBlock) {\n    maxBlock = lastBlock;\n  }\n  \n  if (maxBlock.json.block.number === undefined || maxBlock.json.block.number !== undefined && lastBlock.json.block.number !== undefined && lastBlock.json.block.number > maxBlock.json.block.number) {\n    maxBlock = lastBlock;\n  }\n  if (maxBlock.json.block.number && lastBlock.json.block.number && lastBlock.json.block.number === maxBlock.json.block.number && lastBlock.json.block.hash !== maxBlock.json.block.hash) {\n    hasConflict = true;\n  }\n}\n\nif (hasConflict || maxBlock.json.endpoint=== \"me\" || maxBlock.json.block.hash === ownLastBlockHash) {\n  return [];\n} else {\n  return [maxBlock];\n}\n"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        1420,
+        1660,
         300
-      ]
+      ],
+      "alwaysOutputData": true
     },
     {
       "parameters": {
@@ -147,7 +149,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1,
       "position": [
-        1640,
+        2040,
         300
       ],
       "alwaysOutputData": true
@@ -160,7 +162,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1,
       "position": [
-        1840,
+        2240,
         300
       ],
       "alwaysOutputData": true
@@ -180,7 +182,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        2060,
+        2460,
         300
       ]
     },
@@ -193,8 +195,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1,
       "position": [
-        2340,
-        180
+        2620,
+        100
       ],
       "credentials": {
         "mongoDb": {
@@ -213,8 +215,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1,
       "position": [
-        2620,
-        300
+        2660,
+        700
       ],
       "credentials": {
         "mongoDb": {
@@ -233,8 +235,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        2340,
-        440
+        2620,
+        400
       ]
     },
     {
@@ -253,6 +255,44 @@
       "position": [
         -100,
         480
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{Object.values($data).length !== 0}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Check If Not Empty",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{Object.values($data).length !== 0}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        300
       ]
     }
   ],
@@ -322,7 +362,7 @@
       "main": [
         [
           {
-            "node": "Fetch Last Block",
+            "node": "Check If Not Empty",
             "type": "main",
             "index": 0
           }
@@ -344,7 +384,7 @@
       "main": [
         [
           {
-            "node": "Get Blocks From Node",
+            "node": "IF2",
             "type": "main",
             "index": 0
           }
@@ -423,10 +463,46 @@
           }
         ]
       ]
+    },
+    "Check If Not Empty": {
+      "main": [
+        [
+          {
+            "node": "Fetch Last Block",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Remove Lock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF2": {
+      "main": [
+        [
+          {
+            "node": "Get Blocks From Node",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Remove Lock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2021-12-10T20:45:03.101Z",
-  "updatedAt": "2021-12-12T21:35:25.356Z",
+  "updatedAt": "2021-12-12T22:39:05.945Z",
   "settings": {},
   "staticData": null
 }]
