@@ -143,88 +143,6 @@
     },
     {
       "parameters": {
-        "collection": "runningOperations",
-        "options": {},
-        "query": "{\"type\": \"mining\"}"
-      },
-      "name": "Find Running Mining Operations",
-      "type": "n8n-nodes-base.mongoDb",
-      "typeVersion": 1,
-      "position": [
-        500,
-        360
-      ],
-      "alwaysOutputData": true,
-      "credentials": {
-        "mongoDb": {
-          "id": "1",
-          "name": "MongoDB account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "string": [
-            {
-              "value1": "={{$data[\"type\"]}}",
-              "value2": "mining"
-            }
-          ]
-        }
-      },
-      "name": "IF",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [
-        740,
-        360
-      ]
-    },
-    {
-      "parameters": {
-        "keepOnlySet": true,
-        "values": {
-          "string": [
-            {
-              "name": "type",
-              "value": "mining"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "name": "Set",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 1,
-      "position": [
-        940,
-        380
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "insert",
-        "collection": "runningOperations",
-        "fields": "type",
-        "options": {}
-      },
-      "name": "Set mining running",
-      "type": "n8n-nodes-base.mongoDb",
-      "typeVersion": 1,
-      "position": [
-        1160,
-        380
-      ],
-      "credentials": {
-        "mongoDb": {
-          "id": "1",
-          "name": "MongoDB account"
-        }
-      }
-    },
-    {
-      "parameters": {
         "operation": "delete",
         "collection": "runningOperations",
         "query": "{\"type\": \"mining\"}"
@@ -275,6 +193,70 @@
         2740,
         240
       ]
+    },
+    {
+      "parameters": {
+        "workflowId": "21"
+      },
+      "name": "Check Process Is Running",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        720,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "22"
+      },
+      "name": "Set Process Is Running",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "type",
+              "value": "mining"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set Type Mining",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        520,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$data[\"processIsRunning\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "If Is Running",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        920,
+        400
+      ]
     }
   ],
   "connections": {
@@ -282,7 +264,7 @@
       "main": [
         [
           {
-            "node": "Find Running Mining Operations",
+            "node": "Set Type Mining",
             "type": "main",
             "index": 0
           }
@@ -355,51 +337,6 @@
         ]
       ]
     },
-    "Find Running Mining Operations": {
-      "main": [
-        [
-          {
-            "node": "IF",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "IF": {
-      "main": [
-        [],
-        [
-          {
-            "node": "Set",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Set": {
-      "main": [
-        [
-          {
-            "node": "Set mining running",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Set mining running": {
-      "main": [
-        [
-          {
-            "node": "Get Metadata of Previous Block",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Delete Current Transactions": {
       "main": [
         [
@@ -439,10 +376,55 @@
           }
         ]
       ]
+    },
+    "Check Process Is Running": {
+      "main": [
+        [
+          {
+            "node": "If Is Running",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Process Is Running": {
+      "main": [
+        [
+          {
+            "node": "Get Metadata of Previous Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Type Mining": {
+      "main": [
+        [
+          {
+            "node": "Check Process Is Running",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Is Running": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Set Process Is Running",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2021-12-08T18:59:01.111Z",
-  "updatedAt": "2021-12-09T21:32:18.697Z",
+  "updatedAt": "2021-12-10T21:19:20.046Z",
   "settings": {},
   "staticData": null
 }]

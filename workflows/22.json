@@ -1,0 +1,55 @@
+[{
+  "id": 22,
+  "name": "Set Process Is Running",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "runningOperations",
+        "fields": "type",
+        "options": {}
+      },
+      "name": "Set mining running",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        480,
+        300
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Set mining running",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-10T21:06:31.720Z",
+  "updatedAt": "2021-12-10T21:13:44.250Z",
+  "settings": {},
+  "staticData": null
+}]

@@ -125,7 +125,9 @@
       "position": [
         700,
         300
-      ]
+      ],
+      "notesInFlow": true,
+      "notes": "Currently the hash calculation is outsourced to a separate nodejs application which makes this loop unnecessary. If we used the pure no-code way which is also available in the linked workflow. This loop would be necessary"
     }
   ],
   "connections": {
@@ -209,7 +211,7 @@
     }
   },
   "createdAt": "2021-12-09T10:58:38.939Z",
-  "updatedAt": "2021-12-09T17:36:32.823Z",
+  "updatedAt": "2021-12-12T17:05:14.035Z",
   "settings": {},
   "staticData": null
 }]

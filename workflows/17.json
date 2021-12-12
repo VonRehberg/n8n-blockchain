@@ -151,7 +151,8 @@
         "collection": "blocks",
         "options": {
           "limit": "={{$data[\"top\"]}}",
-          "skip": "={{$data[\"skip\"]}}"
+          "skip": "={{$data[\"skip\"]}}",
+          "sort": "{\"number\": -1}"
         }
       },
       "name": "MongoDB",
@@ -263,7 +264,7 @@
     }
   },
   "createdAt": "2021-12-08T21:41:04.733Z",
-  "updatedAt": "2021-12-08T22:06:50.296Z",
+  "updatedAt": "2021-12-11T13:17:48.878Z",
   "settings": {},
   "staticData": null
 }]

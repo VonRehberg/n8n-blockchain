@@ -1,0 +1,263 @@
+[{
+  "id": 20,
+  "name": "Check Network For New Blocks",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "type",
+              "value": "checkNetwork"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        100,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "21"
+      },
+      "name": "Check Process Is Running",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        300,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$data[\"processIsRunning\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        500,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "22"
+      },
+      "name": "Set Process Is Running",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        720,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "runningOperations",
+        "query": "{\"type\": \"checkNetwork\"}"
+      },
+      "name": "MongoDB1",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        680
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "collection": "nodes",
+        "options": {},
+        "query": "{\"name\": {\"$ne\": \"me\"}}"
+      },
+      "name": "Get Nodes Apart From Own",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        940,
+        300
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=http://{{$data[\"endpoint\"]}}/webhook/getLastBlock",
+        "options": {}
+      },
+      "name": "Fetch Last Block",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        300
+      ],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "workflowId": "14"
+      },
+      "name": "Get Own Last Block",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        80
+      ],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {},
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Check Process Is Running",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Process Is Running": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Set Process Is Running",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Process Is Running": {
+      "main": [
+        [
+          {
+            "node": "Get Nodes Apart From Own",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "MongoDB1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Own Last Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Nodes Apart From Own": {
+      "main": [
+        [
+          {
+            "node": "Fetch Last Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Last Block": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Own Last Block": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-10T20:45:03.101Z",
+  "updatedAt": "2021-12-11T15:21:42.766Z",
+  "settings": {},
+  "staticData": null
+}]

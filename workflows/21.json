@@ -1,0 +1,156 @@
+[{
+  "id": 21,
+  "name": "Check Process Is Running",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$data[\"type\"]}}",
+              "value2": "={{$node[\"Start\"].json[\"type\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        700,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "collection": "runningOperations",
+        "options": {},
+        "query": "={\"type\": \"{{$data[\"type\"]}}\"}"
+      },
+      "name": "Find Running Operations",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "boolean": [
+            {
+              "name": "processIsRunning",
+              "value": true
+            }
+          ],
+          "string": [
+            {
+              "name": "type",
+              "value": "={{$node[\"Start\"].json[\"type\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set Is Running",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        920,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "boolean": [
+            {
+              "name": "processIsRunning"
+            }
+          ],
+          "string": [
+            {
+              "name": "type",
+              "value": "={{$node[\"Start\"].json[\"type\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set Is Not Running",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        920,
+        420
+      ]
+    }
+  ],
+  "connections": {
+    "Find Running Operations": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Find Running Operations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Set Is Running",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Is Not Running",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2021-12-10T20:45:03.117Z",
+  "updatedAt": "2021-12-10T21:08:54.602Z",
+  "settings": {},
+  "staticData": null
+}]
