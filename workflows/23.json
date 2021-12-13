@@ -9,7 +9,7 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
+        -360,
         300
       ]
     },
@@ -137,8 +137,101 @@
       "typeVersion": 1,
       "position": [
         1640,
-        320
+        660
       ]
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "newIdentities"
+      },
+      "name": "Empty Temporary Identities",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        300
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "if (!$items(\"MongoDB\")[1]) {\n  return [];\n}\n\nconst transactions = $items(\"MongoDB\")[1].json.payload.transactions;\nconst identities= [];\nfor (const transaction of transactions) {\n  if (transaction && transaction.data && transaction.data.type === \"newIdentity\") {\n    identities.push({\n      json: {\n        name: transaction.data.name,\n        publicKey: transaction.publicKey,\n      }\n    });\n  }\n}\nreturn identities;"
+      },
+      "name": "Extract Identities",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "newIdentities",
+        "fields": "name,publicKey",
+        "options": {}
+      },
+      "name": "Insert New Identities",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        180
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "collection": "identities",
+        "options": {},
+        "query": "{\"name\": \"me\"}"
+      },
+      "name": "Find Own Identity",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        60,
+        300
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "newIdentities",
+        "fields": "name, publicKey, privateKey",
+        "options": {}
+      },
+      "name": "Insert Into Tmp Identities",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        260,
+        300
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
     }
   ],
   "connections": {
@@ -146,7 +239,7 @@
       "main": [
         [
           {
-            "node": "Set Top and Skip",
+            "node": "Empty Temporary Identities",
             "type": "main",
             "index": 0
           }
@@ -201,7 +294,7 @@
       "main": [
         [
           {
-            "node": "Set",
+            "node": "Extract Identities",
             "type": "main",
             "index": 0
           }
@@ -214,10 +307,65 @@
           }
         ]
       ]
+    },
+    "Empty Temporary Identities": {
+      "main": [
+        [
+          {
+            "node": "Find Own Identity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Identities": {
+      "main": [
+        [
+          {
+            "node": "Insert New Identities",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert New Identities": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Own Identity": {
+      "main": [
+        [
+          {
+            "node": "Insert Into Tmp Identities",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Into Tmp Identities": {
+      "main": [
+        [
+          {
+            "node": "Set Top and Skip",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2021-12-12T20:22:47.055Z",
-  "updatedAt": "2021-12-13T10:45:12.666Z",
+  "updatedAt": "2021-12-13T12:21:58.470Z",
   "settings": {},
   "staticData": null
 }]

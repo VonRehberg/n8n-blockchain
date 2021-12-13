@@ -1,0 +1,49 @@
+<div [class.blurred]="dataService.selectedBlock.type === 'fake'" class="transactions">
+  <mat-form-field appearance="fill">
+    <mat-label>Number</mat-label>
+    <input matInput [ngModel]="dataService.selectedBlock.number" disabled>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Created At</mat-label>
+    <input matInput [ngModel]="dataService.selectedBlock.createdAt" disabled>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Hash</mat-label>
+    <input matInput [ngModel]="dataService.selectedBlock.hash" disabled>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Previous Hash</mat-label>
+    <input matInput [ngModel]="dataService.selectedBlock.previousHash" disabled>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Signature</mat-label>
+    <input matInput [ngModel]="dataService.selectedBlock.signature" disabled>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Public Key</mat-label>
+    <textarea matInput [ngModel]="dataService.selectedBlock.publicKey" disabled></textarea>
+  </mat-form-field>
+  Transactions:
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let transaction of dataService.selectedBlock.payload.transactions">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{transaction.data.type || 'custom'}}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{transaction.createdAt | timeago:live}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <pre>{{stringify(transaction)}}</pre>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <div >
+    
+  </div>
+</div>
+<div *ngIf="dataService.selectedBlock.type === 'fake'" class="notConnected">
+  <button mat-raised-button color="primary" disabled>Please Select a Block</button>
+</div>
+<div *ngIf="dataService.isLoading" class="notConnected">
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</div>

@@ -189,25 +189,6 @@
     {
       "parameters": {
         "operation": "delete",
-        "collection": "newBlocks"
-      },
-      "name": "MongoDB",
-      "type": "n8n-nodes-base.mongoDb",
-      "typeVersion": 1,
-      "position": [
-        2620,
-        100
-      ],
-      "credentials": {
-        "mongoDb": {
-          "id": "1",
-          "name": "MongoDB account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "delete",
         "collection": "runningOperations",
         "query": "{\"type\": {\"$in\": [\"checkNetwork\", \"mining\"]}}"
       },
@@ -215,8 +196,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1,
       "position": [
-        2660,
-        700
+        2720,
+        920
       ],
       "credentials": {
         "mongoDb": {
@@ -224,20 +205,6 @@
           "name": "MongoDB account"
         }
       }
-    },
-    {
-      "parameters": {
-        "requestMethod": "PATCH",
-        "url": "http://nodeworkaround:3000/renameBlocksCollection",
-        "options": {}
-      },
-      "name": "HTTP Request",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        2620,
-        400
-      ]
     },
     {
       "parameters": {
@@ -326,6 +293,72 @@
       "position": [
         2340,
         20
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "PATCH",
+        "url": "http://nodeworkaround:3000/renameBlocksCollection",
+        "options": {}
+      },
+      "name": "Rename Blocks Collection",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2720,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "newBlocks"
+      },
+      "name": "Delete New Blocks",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        2720,
+        -40
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "newIdentities"
+      },
+      "name": "Delete New Identities",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        2720,
+        180
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "requestMethod": "PATCH",
+        "url": "http://nodeworkaround:3000/renameIdentitiesCollection",
+        "options": {}
+      },
+      "name": "Rename Identities Collection",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        2720,
+        700
       ]
     }
   ],
@@ -450,36 +483,14 @@
       "main": [
         [
           {
-            "node": "MongoDB",
+            "node": "Delete New Blocks",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "MongoDB": {
-      "main": [
-        [
-          {
-            "node": "Remove Lock",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request": {
-      "main": [
-        [
-          {
-            "node": "Remove Lock",
+            "node": "Rename Blocks Collection",
             "type": "main",
             "index": 0
           }
@@ -548,10 +559,54 @@
           }
         ]
       ]
+    },
+    "Delete New Blocks": {
+      "main": [
+        [
+          {
+            "node": "Delete New Identities",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete New Identities": {
+      "main": [
+        [
+          {
+            "node": "Remove Lock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename Blocks Collection": {
+      "main": [
+        [
+          {
+            "node": "Rename Identities Collection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename Identities Collection": {
+      "main": [
+        [
+          {
+            "node": "Remove Lock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2021-12-10T20:45:03.101Z",
-  "updatedAt": "2021-12-13T10:28:29.113Z",
+  "updatedAt": "2021-12-13T12:23:27.862Z",
   "settings": {},
   "staticData": null
 }]

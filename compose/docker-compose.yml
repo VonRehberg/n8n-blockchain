@@ -52,8 +52,6 @@ services:
       - NODE_FUNCTION_ALLOW_EXTERNAL=uuid
       - NODE_FUNCTION_ALLOW_BUILTIN=crypto
       - EXECUTIONS_PROCESS=main
-    ports:
-      - 5678
     links:
       - postgres
       - mongodb:mongo
@@ -66,3 +64,12 @@ services:
     # Wait 5 seconds to start n8n to make sure that PostgreSQL is ready
     # when n8n tries to connect to it
     command: sh /start-data.sh
+
+  nginx:
+    image: nginx
+    links:
+      - n8n:n8n
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf 
+    ports:
+      - 80

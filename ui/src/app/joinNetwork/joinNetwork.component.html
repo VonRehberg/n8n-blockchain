@@ -1,0 +1,33 @@
+<h1 mat-dialog-title>Join a Network</h1>
+<div mat-dialog-content>
+  <mat-horizontal-stepper #stepper>
+    <mat-step [stepControl]="endpointFormGroup" label="Enter a valid Endpoint">
+        <form [formGroup]="endpointFormGroup">
+          <mat-form-field appearance="fill">
+            <mat-label>Address</mat-label>
+            <input matInput formControlName="endpointCtrl" placeholder="192.168.0.1:1234" [(ngModel)]="data.endpoint"
+                   required>
+          </mat-form-field>
+        </form>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Validating</ng-template>
+        <div>
+            <div *ngIf="dataService.isLoading">
+                <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+            </div>
+            <div *ngIf="!dataService.isLoading && !dataService.isEndpointSetup">
+                The node is not yet initialized.
+                <button mat-raised-button color="accent" (click)="setupNode()">Setup Node</button>
+            </div>
+            <div *ngIf="!dataService.isLoading && dataService.isEndpointSetup">
+                The node is already setup. You can finalize the connection now.
+            </div>
+        </div>
+      </mat-step>
+  </mat-horizontal-stepper>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancelClick()">Cancle</button>
+  <button mat-button (click)="next()" cdkFocusInitial [disabled]="nextDisabled">Next</button>
+</div>

@@ -31,7 +31,7 @@
     },
     {
       "parameters": {
-        "functionCode": "var crypto = require('crypto');\nreturn items.map((item) => {\n  const result = {\n    json: {\n      data: item.json.body ? item.json.body.data : item.json.data,\n      publicKey: item.json.body ? item.json.body.publicKey : item.json.publicKey,\n      signature: item.json.body ? item.json.body.signature : item.json.signature,\n      author: item.json.body ? item.json.body.author: item.json.author,\n    }\n  };\n  const verifier = crypto.createVerify(\"id-rsassa-pkcs1-v1_5-with-sha3-256\");\n  verifier.update(JSON.stringify(result.json.data), 'utf8');\n  result.json.isValid = verifier.verify(Buffer.from(result.json.publicKey, 'utf8'), Buffer.from(result.json.signature, 'hex'));\n  return result;\n});\n"
+        "functionCode": "var crypto = require('crypto');\nreturn items.map((item) => {\n  const result = {\n    json: {\n      data: item.json.body ? item.json.body.data : item.json.data,\n      publicKey: item.json.body ? item.json.body.publicKey : item.json.publicKey,\n      signature: item.json.body ? item.json.body.signature : item.json.signature,\n      author: item.json.body ? item.json.body.author: item.json.author,\n      createdAt: new Date(),\n    }\n  };\n  const verifier = crypto.createVerify(\"id-rsassa-pkcs1-v1_5-with-sha3-256\");\n  verifier.update(JSON.stringify(result.json.data), 'utf8');\n  result.json.isValid = verifier.verify(Buffer.from(result.json.publicKey, 'utf8'), Buffer.from(result.json.signature, 'hex'));\n  return result;\n});\n"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -100,7 +100,7 @@
       "parameters": {
         "operation": "insert",
         "collection": "currentTransactions",
-        "fields": "data, publicKey, signature, author",
+        "fields": "data, publicKey, signature, author, createdAt",
         "options": {}
       },
       "name": "Insert Into Current Transactions",
@@ -211,15 +211,10 @@
           }
         ]
       ]
-    },
-    "Fetch Identity": {
-      "main": [
-        []
-      ]
     }
   },
   "createdAt": "2021-12-08T16:20:53.661Z",
-  "updatedAt": "2021-12-08T21:21:31.777Z",
+  "updatedAt": "2021-12-13T19:02:44.764Z",
   "settings": {},
   "staticData": null
 }]

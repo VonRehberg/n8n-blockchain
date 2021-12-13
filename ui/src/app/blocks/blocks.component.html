@@ -1,0 +1,25 @@
+<div [class.blurred]="dataService.isConnected === false" class="blockChart">
+  <ngx-charts-bar-vertical
+    [scheme]="dataService.colorScheme"
+    [results]="dataService.blocks"
+    [gradient]="gradient"
+    [xAxis]="showXAxis"
+    [yAxis]="showYAxis"
+    [legend]="showLegend"
+    [showGridLines]="showGridLines"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [yAxisTickFormatting]="yAxisTickFormatting"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    [animations]="animations"
+    (select)="handleBlockSelect($event)"
+    >
+  </ngx-charts-bar-vertical>
+</div>
+<div *ngIf="!dataService.isEndpointSetup" class="notConnected">
+  <button mat-raised-button color="primary" (click)="openConnectDialog()">Please Connect to a Node</button>
+</div>
+<div *ngIf="dataService.isLoading" class="notConnected">
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</div>

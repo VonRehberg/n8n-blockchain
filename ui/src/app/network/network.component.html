@@ -1,0 +1,26 @@
+<div class="container">
+  <button mat-raised-button color="primary" [disabled]="dataService.isConnected === false" (click)="openJoinNetworkDialog()">Join a network</button>
+  <div [class.blurred]="dataService.isConnected === false" class="transactions">
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let node of dataService.nodes">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{node.endpoint}}
+          </mat-panel-title>
+          <mat-panel-description>
+            {{node.name}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <div >
+      
+    </div>
+  </div>
+  <div *ngIf="!dataService.isEndpointSetup" class="notConnected">
+    <button mat-raised-button color="primary" (click)="openConnectDialog()">Please Connect to a Node</button>
+  </div>
+  <div *ngIf="dataService.isLoading" class="notConnected">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</div>
