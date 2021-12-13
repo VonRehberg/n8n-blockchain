@@ -209,7 +209,7 @@
       "parameters": {
         "operation": "delete",
         "collection": "runningOperations",
-        "query": "{\"type\": \"checkNetwork\"}"
+        "query": "{\"type\": {\"$in\": [\"checkNetwork\", \"mining\"]}}"
       },
       "name": "Remove Lock",
       "type": "n8n-nodes-base.mongoDb",
@@ -293,6 +293,39 @@
       "position": [
         1860,
         300
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "type",
+              "value": "mining"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2120,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "22"
+      },
+      "name": "Lock Mining Process",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        2340,
+        20
       ]
     }
   ],
@@ -489,6 +522,11 @@
             "node": "Get Blocks From Node",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Set1",
+            "type": "main",
+            "index": 0
           }
         ],
         [
@@ -499,10 +537,21 @@
           }
         ]
       ]
+    },
+    "Set1": {
+      "main": [
+        [
+          {
+            "node": "Lock Mining Process",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2021-12-10T20:45:03.101Z",
-  "updatedAt": "2021-12-12T22:39:05.945Z",
+  "updatedAt": "2021-12-13T10:28:29.113Z",
   "settings": {},
   "staticData": null
 }]
