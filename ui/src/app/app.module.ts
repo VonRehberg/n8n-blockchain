@@ -28,6 +28,9 @@ import { BlockDetailsComponent } from './block-details/block-details.component';
 import { TimeagoModule } from 'ngx-timeago';
 import { NetworkComponent } from './network/network.component';
 import { JoinNetworkComponent } from './joinNetwork/joinNetwork.component';
+import { IdentitiesComponent } from './identities/identities.component';
+import { NewIdentityComponent } from './newIdentity/newIdentity.component';
+import { WriteContentComponent } from './writeContent/writeContent.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +41,9 @@ import { JoinNetworkComponent } from './joinNetwork/joinNetwork.component';
     ConnectComponent,
     NetworkComponent,
     JoinNetworkComponent,
+    IdentitiesComponent,
+    NewIdentityComponent,
+    WriteContentComponent,
   ],
   imports: [
     TimeagoModule.forRoot(),
@@ -66,6 +72,8 @@ import { JoinNetworkComponent } from './joinNetwork/joinNetwork.component';
   entryComponents: [
     ConnectComponent,
     JoinNetworkComponent,
+    NewIdentityComponent,
+    WriteContentComponent
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

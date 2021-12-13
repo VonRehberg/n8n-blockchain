@@ -1,0 +1,24 @@
+<div class="container">
+  <button mat-raised-button color="primary" [disabled]="dataService.isConnected === false" (click)="openNewIdentityDialog()">Create new Identity</button>
+  <div [class.blurred]="dataService.isConnected === false" class="transactions">
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let identity of dataService.identities">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{identity.name}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <pre>{{identity.publicKey}}</pre>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <div >
+      
+    </div>
+  </div>
+  <div *ngIf="!dataService.isEndpointSetup" class="notConnected">
+    <button mat-raised-button color="primary" (click)="openConnectDialog()">Please Connect to a Node</button>
+  </div>
+  <div *ngIf="dataService.isLoading" class="notConnected">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</div>

@@ -22,6 +22,22 @@ app.patch('/renameBlocksCollection', async (req, res) => {
     }
 });
 
+app.patch('/renameIdentitiesCollection', async (req, res) => {
+    try {
+        console.log("got request");
+        const client = await MongoClient.connect("mongodb://mongo:27017", {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        await client.connect();
+        const db = client.db("blockchain");
+        await db.renameCollection('newIdentities', 'identities', {dropTarget: true, });
+        res.status(201).send();
+    } catch (e) {
+        res.status(500).send({message: e.message});
+    }
+});
+
 app.post('/calculateHash', async (req, res) => {
     try {
         console.log(req.body.number);

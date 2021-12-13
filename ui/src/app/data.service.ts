@@ -51,6 +51,7 @@ export class DataService {
     };
     public blocks = [];
     public nodes = [{name: "me", publicKey: "--------FAKE KEY----------"}];
+    public identities = [];
     
 
     constructor(private http: HttpClient, private snackbar: MatSnackBar) {
@@ -80,7 +81,7 @@ export class DataService {
     isEndpointSetup = false;
     checkEndpoint() {
         this.isLoading = true;
-        const subscription = this.http.get("http://" + this.endpoint + "/webhook/isNodeSetup");
+        const subscription = this.checkEndpointBy(this.endpoint);
         subscription.subscribe((data: any) => {
             this.isEndpointSetup = data.isInitialized;
             this.isLoading = false;
@@ -91,9 +92,13 @@ export class DataService {
         return subscription;
     }
 
+    checkEndpointBy(endpoint) {
+        return this.http.get("http://" + endpoint + "/webhook/isNodeSetup")
+    }
+
     setupNode() {
         this.isLoading = true;
-        const subscription = this.http.get("http://" + this.endpoint + "/webhook/setupNode");
+        const subscription = this.setupNodeBy(this.endpoint);
         subscription.subscribe((data: any) => {
             this.isEndpointSetup = true;
             this.isLoading = false;
@@ -102,6 +107,18 @@ export class DataService {
             this.displayMessage('Could not setup node');
         });
         return subscription;
+    }
+
+    setupNodeBy(endpoint) {
+        return this.http.get("http://" + endpoint + "/webhook/setupNode");
+    }
+
+    createIdentity(name) {
+        return this.http.post("http://" + this.endpoint + "/webhook/createIdentity", {name}, {headers: {"content-type": "application/json"}});
+    }
+
+    joinNetwork(endpoint) {
+        return this.http.post("http://" + this.endpoint + "/webhook/joinNetwork", {endpoint: endpoint}, {headers: {"content-type": "application/json"}});
     }
 
     fetchNodeInfos() {
@@ -116,6 +133,7 @@ export class DataService {
                     extra: block,
                 };
             });
+            this.blocks.sort((block1, block2) => block1.extra.number - block2.extra.number);
             while (this.blocks.length <= 20) {
                 this.blocks.push({name: this.getEmptyName(this.blocks.length), value: 0});
             }
@@ -135,6 +153,19 @@ export class DataService {
             this.isLoading = false;
             this.isConnected = true;
             this.nodes = data;
+            this.getIdentities();
+        }, (error) => {
+            this.isLoading = false;
+            this.displayMessage('Could not retrieve nodes');
+        });
+    }
+
+    getIdentities() {
+        this.isLoading = true;
+        this.http.get("http://" + this.endpoint + "/webhook/getIdentities").subscribe((data: any[]) => {
+            this.isLoading = false;
+            this.isConnected = true;
+            this.identities = data;
         }, (error) => {
             this.isLoading = false;
             this.displayMessage('Could not retrieve nodes');
@@ -166,4 +197,12 @@ export class DataService {
 
 export interface ConnectData {
     endpoint: string;
+}
+
+export interface NewIdentityData {
+    name: string;
+}
+
+export interface NewTransactionData {
+    data: any;
 }

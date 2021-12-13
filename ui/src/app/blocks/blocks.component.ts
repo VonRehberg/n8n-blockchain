@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Data, Router } from '@angular/router';
 import { ConnectComponent } from '../connect/connect.component';
 import { DataService } from '../data.service';
+import { WriteContentComponent } from '../writeContent/writeContent.component';
 
 @Component({
   selector: 'app-blocks',
@@ -36,6 +37,17 @@ export class BlocksComponent {
     const dialogRef = this.dialog.open(ConnectComponent, {
       width: '550px',
       data: {endpoint: '192.168.188.20:63417'},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.dataService.fetchNodeInfos();
+    });
+  }
+
+  openNewTransactionDialog() {
+    const dialogRef = this.dialog.open(WriteContentComponent, {
+      width: '550px',
+      data: {},
     });
 
     dialogRef.afterClosed().subscribe(result => {

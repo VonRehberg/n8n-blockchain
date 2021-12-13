@@ -1,3 +1,4 @@
+<button mat-raised-button color="primary" (click)="openNewTransactionDialog()">New Transaction</button>
 <div [class.blurred]="dataService.isConnected === false" class="blockChart">
   <ngx-charts-bar-vertical
     [scheme]="dataService.colorScheme"

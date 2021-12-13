@@ -1,0 +1,29 @@
+<h1 mat-dialog-title>New Identity</h1>
+<div mat-dialog-content>
+  <mat-horizontal-stepper #stepper>
+    <mat-step [stepControl]="nameFormGroup" label="Enter a Nickname">
+        <form [formGroup]="nameFormGroup">
+          <mat-form-field appearance="fill">
+            <mat-label>Nickname</mat-label>
+            <input matInput formControlName="nameCtrl" placeholder="Nickname" [(ngModel)]="data.name"
+                   required>
+          </mat-form-field>
+        </form>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Validating</ng-template>
+        <div>
+            <div *ngIf="isLoading">
+                <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+            </div>
+            <div *ngIf="!dataService.isLoading && !isLoading">
+                Done.
+            </div>
+        </div>
+      </mat-step>
+  </mat-horizontal-stepper>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancelClick()">Cancle</button>
+  <button mat-button (click)="next()" cdkFocusInitial [disabled]="nextDisabled">Next</button>
+</div>

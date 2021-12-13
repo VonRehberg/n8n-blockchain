@@ -1,0 +1,22 @@
+[{
+  "id": 24,
+  "name": "My workflow",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    }
+  ],
+  "connections": {},
+  "createdAt": "2021-12-13T21:49:15.472Z",
+  "updatedAt": "2021-12-13T21:49:15.472Z",
+  "settings": {},
+  "staticData": null
+}]

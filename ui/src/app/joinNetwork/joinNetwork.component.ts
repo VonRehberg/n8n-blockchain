@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatStepper } from '@angular/material/stepper';
 import { ConnectData, DataService } from '../data.service';
 
@@ -13,8 +14,11 @@ export class JoinNetworkComponent implements OnInit {
     @ViewChild('stepper')
     _stepper: MatStepper;
     nextDisabled = false;
+    nodeNotInitialized = false;
+    isLoading = false;
     endpointFormGroup: FormGroup;
     constructor(
+        private snackbar: MatSnackBar,
         private _formBuilder: FormBuilder,
         public dialogRef: MatDialogRef<JoinNetworkComponent>,
         @Inject(MAT_DIALOG_DATA) public data: ConnectData,
@@ -31,13 +35,23 @@ export class JoinNetworkComponent implements OnInit {
         this.dialogRef.close(false);
     }
     connect(): void {
-        this.dialogRef.close(true);
+        this.isLoading = true;
+        this.dataService.joinNetwork(this.data.endpoint).subscribe((data) => {
+            this.isLoading = false;
+            this.dialogRef.close(true);
+        }, (error) => {
+            this.isLoading = false;
+            this.snackbar.open("Failed to Join Network", "OK");
+        });
     }
     next() {
         if (this._stepper.selectedIndex === 0) {
             this._stepper.next();
-            this.dataService.setEndpointAndCheck(this.data.endpoint).subscribe(() => {
-                if (!this.dataService.isEndpointSetup) {
+            this.isLoading = true;
+            this.dataService.checkEndpointBy(this.data.endpoint).subscribe((data: any) => {
+                this.isLoading = false;
+                if (!data.isInitialized) {
+                    this.nodeNotInitialized = true;
                     this.nextDisabled = true;
                 }
             });
@@ -47,8 +61,14 @@ export class JoinNetworkComponent implements OnInit {
     }
 
     setupNode() {
-        this.dataService.setupNode().subscribe(() => {
+        this.isLoading = true;
+        this.dataService.setupNodeBy(this.data.endpoint).subscribe(() => {
+            this.isLoading = false;
             this.nextDisabled = false;
+            this.nodeNotInitialized = false;
+        }, (error) => {
+            this.isLoading = false;
+            this.snackbar.open("Failed to Setup Node", "OK");
         });
     }
 }

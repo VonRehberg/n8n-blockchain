@@ -13,15 +13,15 @@
       <mat-step>
         <ng-template matStepLabel>Validating</ng-template>
         <div>
-            <div *ngIf="dataService.isLoading">
+            <div *ngIf="isLoading">
                 <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
             </div>
-            <div *ngIf="!dataService.isLoading && !dataService.isEndpointSetup">
+            <div *ngIf="!dataService.isLoading && nodeNotInitialized && !isLoading">
                 The node is not yet initialized.
                 <button mat-raised-button color="accent" (click)="setupNode()">Setup Node</button>
             </div>
-            <div *ngIf="!dataService.isLoading && dataService.isEndpointSetup">
-                The node is already setup. You can finalize the connection now.
+            <div *ngIf="!dataService.isLoading && !nodeNotInitialized && !isLoading">
+                By clicking next you will join this network. Your own blocks will be wiped, which cannot be undone. Depending on the number of available blocks, synchronization may take a while.
             </div>
         </div>
       </mat-step>
