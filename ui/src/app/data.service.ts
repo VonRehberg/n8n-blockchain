@@ -117,6 +117,10 @@ export class DataService {
         return this.http.post("http://" + this.endpoint + "/webhook/createIdentity", {name}, {headers: {"content-type": "application/json"}});
     }
 
+    createTransaction(data) {
+        return this.http.post("http://" + this.endpoint + "/webhook/createTransaction", data, {headers: {"content-type": "application/json"}});
+    }
+
     joinNetwork(endpoint) {
         return this.http.post("http://" + this.endpoint + "/webhook/joinNetwork", {endpoint: endpoint}, {headers: {"content-type": "application/json"}});
     }
@@ -205,4 +209,6 @@ export interface NewIdentityData {
 
 export interface NewTransactionData {
     data: any;
+    author: string;
+    signature: string;
 }

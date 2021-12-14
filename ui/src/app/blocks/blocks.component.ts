@@ -46,7 +46,7 @@ export class BlocksComponent {
 
   openNewTransactionDialog() {
     const dialogRef = this.dialog.open(WriteContentComponent, {
-      width: '550px',
+      width: '750px',
       data: {},
     });
 

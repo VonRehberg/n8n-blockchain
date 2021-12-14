@@ -16,7 +16,7 @@ export class WriteContentComponent implements OnInit {
     nextDisabled = false;
     nodeNotInitialized = false;
     isLoading = false;
-    privateKey: ArrayBuffer;
+    privateKey: CryptoKey;
     privateKeyFormGroup: FormGroup;
     contentFormGroup: FormGroup;
     constructor(
@@ -32,40 +32,59 @@ export class WriteContentComponent implements OnInit {
           privateKeyCtrl: ['Private Key File', Validators.required],
       });
       this.contentFormGroup = this._formBuilder.group({
-          nameCtrl: ['Your Name', Validators.required],
+        authorCtrl: ['Name', Validators.required],
+          dataCtrl: ['Data', Validators.required],
+          signatureCtrl: ['Signature', Validators.required]
       });
     }
     
     onCancelClick(): void {
         this.dialogRef.close(false);
     }
-    next() {
-        if (this._stepper.selectedIndex === 0) {
-            this._stepper.next();
-            this.isLoading = true;
-            // Write Transaction
-        } else {
-            this.dialogRef.close(true);
-        }
+    async next() {
+      if (!this.privateKey) {
+        return;
+      }
+      if (this._stepper.selectedIndex === 0) {
+        this._stepper.next();
+      } else {
+        this.isLoading = true;
+        this.dataService.createTransaction(this.data).subscribe(() => {
+          this.dialogRef.close(true);
+        }, (error) => {
+          this.isLoading = false;
+          this.snackbar.open("Failed to write transaction: " + error.message, "OK");
+        });
+        // Write Transaction
+        // this.dialogRef.close(true);
+      }
+    }
+
+    async handleDataChange() {
+      this.data.signature = buf2hex(await crypto.subtle.sign({name: 'RSASSA-PKCS1-v1_5', hash: "SHA-256"}, this.privateKey, new TextEncoder().encode(this.data.data)));
     }
 
     handlePrivateKeyChange(event) {
       const element = event.currentTarget as HTMLInputElement;
       const reader = new FileReader();
       reader.onload = async (file: any) => {
-        const keyContent = reader.result as string;
-
-        this.privateKey = stringToArrayBuffer(atob(keyContent.replace("-----BEGIN PRIVATE KEY-----\n", "").replace("-----END PRIVATE KEY-----", "")));
-        this.next();
-
         try {
-          const key = await crypto.subtle.importKey("pkcs8", this.privateKey, {name: "RSASSA-PKCS1-v1_5", hash: "SHA-256"} as RsaHashedImportParams, false, ["sign"]);
-          console.log(buf2hex(await crypto.subtle.sign({name: 'RSASSA-PKCS1-v1_5', hash: "SHA-256"}, key, new TextEncoder().encode("blaaaaaa"))));
+          const keyContent = reader.result as string;
+
+          const key = stringToArrayBuffer(atob(keyContent.replace("-----BEGIN PRIVATE KEY-----\n", "").replace("-----END PRIVATE KEY-----", "")));
+
+          this.privateKey = await crypto.subtle.importKey("pkcs8", key, {name: "RSASSA-PKCS1-v1_5", hash: "SHA-256"} as RsaHashedImportParams, false, ["sign"]);
+          this.next();
         } catch (e) {
-          console.error(e);
+          this.snackbar.open('Failed to read key', 'OK');
         }
       }
       reader.readAsText(element.files[0]);
+      try {
+        this.data.author = element.files[0].name.replace("privateKey-", "").replace(".pem", "");
+      } catch (e) {
+        console.log(e);
+      }
     }
 }
 function stringToArrayBuffer(byteString){
@@ -75,7 +94,7 @@ function stringToArrayBuffer(byteString){
   }
   return byteArray;
 }
-function buf2hex(buffer) { // buffer is an ArrayBuffer
+function buf2hex(buffer) {
   return [...new Uint8Array(buffer)]
       .map(x => x.toString(16).padStart(2, '0'))
       .join('');

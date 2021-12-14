@@ -1,27 +1,28 @@
 <div [class.blurred]="dataService.selectedBlock.type === 'fake'" class="transactions">
+  <button mat-raised-button (click)="verify()">Verify</button>
   <mat-form-field appearance="fill">
     <mat-label>Number</mat-label>
-    <input matInput [ngModel]="dataService.selectedBlock.number" disabled>
+    <input matInput [ngModel]="dataService.selectedBlock.number" readonly>
   </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>Created At</mat-label>
-    <input matInput [ngModel]="dataService.selectedBlock.createdAt" disabled>
+    <input matInput [ngModel]="dataService.selectedBlock.createdAt" readonly>
   </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>Hash</mat-label>
-    <input matInput [ngModel]="dataService.selectedBlock.hash" disabled>
+    <input matInput [ngModel]="dataService.selectedBlock.hash" readonly>
   </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>Previous Hash</mat-label>
-    <input matInput [ngModel]="dataService.selectedBlock.previousHash" disabled>
+    <input matInput [ngModel]="dataService.selectedBlock.previousHash" readonly>
   </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>Signature</mat-label>
-    <input matInput [ngModel]="dataService.selectedBlock.signature" disabled>
+    <input matInput [ngModel]="dataService.selectedBlock.signature" readonly>
   </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>Public Key</mat-label>
-    <textarea matInput [ngModel]="dataService.selectedBlock.publicKey" disabled></textarea>
+    <textarea matInput [ngModel]="dataService.selectedBlock.publicKey" readonly></textarea>
   </mat-form-field>
   Transactions:
   <mat-accordion>

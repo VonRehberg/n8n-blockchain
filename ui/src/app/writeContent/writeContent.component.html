@@ -1,13 +1,8 @@
 <h1 mat-dialog-title>New Transaction</h1>
 <div mat-dialog-content>
-  <mat-horizontal-stepper #stepper>
+  <mat-horizontal-stepper #stepper *ngIf="isLoading === false">
     <mat-step [stepControl]="privateKeyFormGroup" label="Pick Private Key">
       <form [formGroup]="privateKeyFormGroup">
-        <!--<mat-form-field appearance="fill">
-          <mat-label>Nickname</mat-label>
-          <input matFileInput formControlName="privateKeyCtrl" placeholder="Nickname" [(ngModel)]="privateKey"
-                  required>
-        </mat-form-field>-->
         <input class="hide" id="input-file-id" type="file" (change)="handlePrivateKeyChange($event)" />
         <label class="mat-focus-indicator mat-raised-button mat-button-base mat-primary" mat-raised-button for="input-file-id">Choose Files</label>
       </form>
@@ -15,24 +10,24 @@
     <mat-step [stepControl]="contentFormGroup" label="Enter Transaction Details">
       <form [formGroup]="contentFormGroup">
         <mat-form-field appearance="fill">
-          <mat-label>Nickname</mat-label>
-          <input matInput formControlName="nameCtrl" placeholder="Nickname" [(ngModel)]="data.data"
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="authorCtrl" placeholder="Name" [(ngModel)]="data.author"
+                  required>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Transaction Data</mat-label>
+          <textarea matInput formControlName="dataCtrl" placeholder="Data" (keyup)="handleDataChange()" [(ngModel)]="data.data"
+                  required></textarea>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Signature</mat-label>
+          <input matInput formControlName="signatureCtrl" placeholder="Signature" readonly [(ngModel)]="data.signature"
                   required>
         </mat-form-field>
       </form>
     </mat-step>
-    <mat-step>
-      <ng-template matStepLabel>Validating</ng-template>
-      <div>
-          <div *ngIf="isLoading">
-              <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-          </div>
-          <div *ngIf="!dataService.isLoading && !isLoading">
-              Done.
-          </div>
-      </div>
-    </mat-step>
   </mat-horizontal-stepper>
+  <mat-progress-spinner *ngIf="isLoading === true" mode="indeterminate"></mat-progress-spinner>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onCancelClick()">Cancle</button>

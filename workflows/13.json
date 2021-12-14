@@ -9,8 +9,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
-        300
+        -200,
+        200
       ]
     },
     {
@@ -24,14 +24,14 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        240,
-        540
+        -200,
+        440
       ],
       "webhookId": "45ea226a-1e6f-4df2-99c9-a78da4f41420"
     },
     {
       "parameters": {
-        "functionCode": "var crypto = require('crypto');\nreturn items.map((item) => {\n  const result = {\n    json: {\n      data: item.json.body ? item.json.body.data : item.json.data,\n      publicKey: item.json.body ? item.json.body.publicKey : item.json.publicKey,\n      signature: item.json.body ? item.json.body.signature : item.json.signature,\n      author: item.json.body ? item.json.body.author: item.json.author,\n      createdAt: new Date(),\n    }\n  };\n  const verifier = crypto.createVerify(\"id-rsassa-pkcs1-v1_5-with-sha3-256\");\n  verifier.update(JSON.stringify(result.json.data), 'utf8');\n  result.json.isValid = verifier.verify(Buffer.from(result.json.publicKey, 'utf8'), Buffer.from(result.json.signature, 'hex'));\n  return result;\n});\n"
+        "functionCode": "var crypto = require('crypto');\nreturn items.map((item) => {\n  const result = {\n    json: {\n      data: item.json.body ? item.json.body.data : item.json.data,\n      publicKey: item.json.body ? item.json.body.publicKey : item.json.publicKey,\n      signature: item.json.body ? item.json.body.signature : item.json.signature,\n      author: item.json.body ? item.json.body.author: item.json.author,\n      createdAt: new Date(),\n    }\n  };\n  try {\n    const verifier = crypto.createVerify(\"rsa-sha256\"/*'rsa-sha256'*/);\n    if (typeof result.json.data === 'string') {\n      verifier.update(result.json.data, 'utf8');\n    } else {\n      verifier.update(JSON.stringify(result.json.data), 'utf8');\n    }\n    result.json.isValid = verifier.verify(result.json.publicKey, Buffer.from(result.json.signature, 'hex'));\n  } catch (e) {\n    result.json.isValid = false;\n    result.json.error = e.message;\n  }\n  return result;\n});\n"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -39,7 +39,8 @@
       "position": [
         500,
         420
-      ]
+      ],
+      "executeOnce": true
     },
     {
       "parameters": {
@@ -50,12 +51,7 @@
               "value2": true
             }
           ],
-          "string": [
-            {
-              "value1": "={{$node[\"Fetch Identity\"].json[\"publicKey\"]}}",
-              "value2": "={{$node[\"Webhook\"].json[\"body\"][\"publicKey\"]}}"
-            }
-          ]
+          "string": []
         }
       },
       "name": "IF",
@@ -71,7 +67,9 @@
       "parameters": {
         "respondWith": "json",
         "responseBody": "{\"error\": true, \"message\": \"Invalid Signature or Unknown Identity\"}",
-        "options": {}
+        "options": {
+          "responseCode": 400
+        }
       },
       "name": "Respond Invalid Signature",
       "type": "n8n-nodes-base.respondToWebhook",
@@ -127,8 +125,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1,
       "position": [
-        500,
-        200
+        40,
+        440
       ],
       "alwaysOutputData": true,
       "credentials": {
@@ -137,17 +135,45 @@
           "name": "MongoDB account"
         }
       }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "author",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"author\"]}}"
+            },
+            {
+              "name": "signature",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"signature\"]}}"
+            },
+            {
+              "name": "publicKey",
+              "value": "={{$data[\"publicKey\"]}}"
+            },
+            {
+              "name": "data",
+              "value": "={{$node[\"Webhook\"].json[\"body\"][\"data\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        260,
+        440
+      ]
     }
   ],
   "connections": {
     "Webhook": {
       "main": [
         [
-          {
-            "node": "Function",
-            "type": "main",
-            "index": 0
-          },
           {
             "node": "Fetch Identity",
             "type": "main",
@@ -203,9 +229,26 @@
             "node": "Function",
             "type": "main",
             "index": 0
-          },
+          }
+        ]
+      ]
+    },
+    "Fetch Identity": {
+      "main": [
+        [
           {
-            "node": "Fetch Identity",
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Function",
             "type": "main",
             "index": 0
           }
@@ -214,7 +257,7 @@
     }
   },
   "createdAt": "2021-12-08T16:20:53.661Z",
-  "updatedAt": "2021-12-13T19:02:44.764Z",
+  "updatedAt": "2021-12-14T23:27:20.596Z",
   "settings": {},
   "staticData": null
 }]

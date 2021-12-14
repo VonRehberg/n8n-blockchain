@@ -90,7 +90,7 @@
     },
     {
       "parameters": {
-        "functionCode": "const crypto = require(\"crypto\");\n\nif (!items[1]) {\n  return [{json: {isValid: true}}];\n}\nconst verifier = crypto.createVerify(\"id-rsassa-pkcs1-v1_5-with-sha3-256\");\nverifier.update(JSON.stringify(items[1].json.payload), 'utf8');\nconst isValidSignature = verifier.verify(Buffer.from(items[1].json.publicKey, 'utf8'), Buffer.from(items[1].json.signature, 'hex'))\nif (crypto.createHash('SHA256').update(items[1].json.number + items[0].json.hash + items[1].json.createdAt + JSON.stringify(items[1].json.payload) + items[1].json.nonce).digest('hex') === items[1].json.hash &&\n  isValidSignature === true) {\n  return [{json: {isValid: true}}];\n} else {\n  return [{json: {isValid: false}}];\n}\n"
+        "functionCode": "const crypto = require(\"crypto\");\n\nif (!items[1]) {\n  return [{json: {isValid: true}}];\n}\nconst verifier = crypto.createVerify(\"rsa-sha256\");\nverifier.update(JSON.stringify(items[1].json.payload), 'utf8');\nconst isValidSignature = verifier.verify(Buffer.from(items[1].json.publicKey, 'utf8'), Buffer.from(items[1].json.signature, 'hex'))\nif (crypto.createHash('SHA256').update(items[1].json.number + items[0].json.hash + items[1].json.createdAt + JSON.stringify(items[1].json.payload) + items[1].json.nonce).digest('hex') === items[1].json.hash &&\n  isValidSignature === true) {\n  return [{json: {isValid: true}}];\n} else {\n  return [{json: {isValid: false}}];\n}\n"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",

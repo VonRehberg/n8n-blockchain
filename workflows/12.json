@@ -226,7 +226,7 @@
         "action": "sign",
         "value": "={{JSON.stringify($json[\"data\"])}}",
         "dataPropertyName": "signature",
-        "algorithm": "id-rsassa-pkcs1-v1_5-with-sha3-256",
+        "algorithm": "rsa-sha256",
         "privateKey": "={{$node[\"Create New Private Public Keypair\"].json[\"privateKey\"]}}"
       },
       "name": "Crypto",
