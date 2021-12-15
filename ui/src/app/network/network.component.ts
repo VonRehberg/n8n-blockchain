@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConnectComponent } from '../connect/connect.component';
 import { DataService } from '../data.service';
 import { JoinNetworkComponent } from '../joinNetwork/joinNetwork.component';
@@ -10,8 +11,8 @@ import { JoinNetworkComponent } from '../joinNetwork/joinNetwork.component';
   styleUrls: ['./network.component.scss']
 })
 export class NetworkComponent {
-  live = true;
   constructor(
+    private snackbar: MatSnackBar,
     public dataService: DataService,
     public dialog: MatDialog) {}
   
@@ -35,6 +36,14 @@ export class NetworkComponent {
     dialogRef.afterClosed().subscribe(result => {
       this.dataService.fetchNodeInfos();
     });
+  }
+
+  connectTo(node) {
+    this.dataService.setEndpointAndCheck(node.endpoint).subscribe(() => {
+      this.dataService.fetchNodeInfos();
+    }, (error) => {
+      this.snackbar.open("Failed to connect", "OK");
+    })
   }
     
 }

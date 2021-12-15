@@ -113,7 +113,8 @@
         1460,
         300
       ],
-      "alwaysOutputData": false
+      "alwaysOutputData": false,
+      "continueOnFail": true
     },
     {
       "parameters": {
@@ -130,7 +131,7 @@
     },
     {
       "parameters": {
-        "functionCode": "const ownLastBlockHash = $items(\"Get Own Last Block\")[0].json.hash;\nconst ownLastBlockNumber = $items(\"Get Own Last Block\")[0].json.number;\nconst hasOwnBlock = !ownLastBlockHash && !ownLastBlockNumber ? false : true;\nconst nodesApartFromOwn = $items(\"Get Nodes Apart From Own\");\nconst lastBlocks = $items(\"Fetch Last Block\").map(function(item) {\n  return {\n    json: {\n      block: item.json,\n      endpoint: nodesApartFromOwn[$items(\"Fetch Last Block\").indexOf(item)].json.endpoint,\n    }\n  };\n});\nlastBlocks.push({\n  json: {\n    endpoint: \"me\",\n    block: $items(\"Get Own Last Block\")[0].json,\n  }\n});\n\nlet maxBlock;\nlet hasConflict = false;\nfor (const lastBlock of lastBlocks) {\n  if (!maxBlock) {\n    maxBlock = lastBlock;\n  }\n  \n  if (maxBlock.json.block.number === undefined || maxBlock.json.block.number !== undefined && lastBlock.json.block.number !== undefined && lastBlock.json.block.number > maxBlock.json.block.number) {\n    maxBlock = lastBlock;\n  }\n  if (maxBlock.json.block.number && lastBlock.json.block.number && lastBlock.json.block.number === maxBlock.json.block.number && lastBlock.json.block.hash !== maxBlock.json.block.hash) {\n    hasConflict = true;\n  }\n}\n\nif (hasConflict || maxBlock.json.endpoint=== \"me\" || maxBlock.json.block.hash === ownLastBlockHash) {\n  return [];\n} else {\n  return [maxBlock];\n}\n"
+        "functionCode": "const ownLastBlockHash = $items(\"Get Own Last Block\")[0].json.hash;\nconst ownLastBlockNumber = $items(\"Get Own Last Block\")[0].json.number;\nconst hasOwnBlock = !ownLastBlockHash && !ownLastBlockNumber ? false : true;\nconst nodesApartFromOwn = $items(\"Get Nodes Apart From Own\");\nconst lastBlocks = [];\nfor (const block of $items(\"Fetch Last Block\")) {\n  if (block.hasOwnProperty(\"endpoint\")) {\n    continue; // means the http call failed\n  }\n  lastBlocks.push({\n    json: {\n      block: block.json,\n      endpoint: nodesApartFromOwn[$items(\"Fetch Last Block\").indexOf(block)].json.endpoint,\n    }\n  });\n}\nlastBlocks.push({\n  json: {\n    endpoint: \"me\",\n    block: $items(\"Get Own Last Block\")[0].json,\n  }\n});\n\nlet maxBlock;\nlet hasConflict = false;\nfor (const lastBlock of lastBlocks) {\n  if (!maxBlock) {\n    maxBlock = lastBlock;\n  }\n  \n  if (maxBlock.json.block.number === undefined || maxBlock.json.block.number !== undefined && lastBlock.json.block.number !== undefined && lastBlock.json.block.number > maxBlock.json.block.number) {\n    maxBlock = lastBlock;\n  }\n  if (maxBlock.json.block.number && lastBlock.json.block.number && lastBlock.json.block.number === maxBlock.json.block.number && lastBlock.json.block.hash !== maxBlock.json.block.hash) {\n    hasConflict = true;\n  }\n}\n\nif (hasConflict || maxBlock.json.endpoint=== \"me\" || maxBlock.json.block.hash === ownLastBlockHash) {\n  return [];\n} else {\n  return [maxBlock];\n}\n"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -606,7 +607,7 @@
     }
   },
   "createdAt": "2021-12-10T20:45:03.101Z",
-  "updatedAt": "2021-12-13T12:23:27.862Z",
+  "updatedAt": "2021-12-15T09:12:28.316Z",
   "settings": {},
   "staticData": null
 }]

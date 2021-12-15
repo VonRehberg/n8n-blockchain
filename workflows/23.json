@@ -161,7 +161,7 @@
     },
     {
       "parameters": {
-        "functionCode": "if (!$items(\"MongoDB\")[1]) {\n  return [];\n}\n\nconst transactions = $items(\"MongoDB\")[1].json.payload.transactions;\nconst identities= [];\nfor (const transaction of transactions) {\n  if (transaction && transaction.data && transaction.data.type === \"newIdentity\") {\n    identities.push({\n      json: {\n        name: transaction.data.name,\n        publicKey: transaction.publicKey,\n      }\n    });\n  }\n}\nreturn identities;"
+        "functionCode": "if (!$items(\"MongoDB\")[1]) {\n  return [];\n}\n\nconst transactions = $items(\"MongoDB\")[1].json.payload.transactions;\nconst identities= [];\nfor (const transaction of transactions) {\n  if (transaction && transaction.data && transaction.data.type === \"newIdentity\") {\n    identities.push({\n      json: {\n        name: transaction.author,\n        publicKey: transaction.publicKey,\n      }\n    });\n  }\n}\nreturn identities;"
       },
       "name": "Extract Identities",
       "type": "n8n-nodes-base.function",
@@ -365,7 +365,7 @@
     }
   },
   "createdAt": "2021-12-12T20:22:47.055Z",
-  "updatedAt": "2021-12-13T12:21:58.470Z",
+  "updatedAt": "2021-12-15T09:06:49.488Z",
   "settings": {},
   "staticData": null
 }]

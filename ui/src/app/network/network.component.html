@@ -11,6 +11,7 @@
             {{node.name}}
           </mat-panel-description>
         </mat-expansion-panel-header>
+        <button mat-raised-button color="primary" *ngIf="node.name !== 'me'" (click)="connectTo(node)">Connect</button>
       </mat-expansion-panel>
     </mat-accordion>
     <div >
