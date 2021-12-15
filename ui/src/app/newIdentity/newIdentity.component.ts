@@ -43,7 +43,7 @@ export class NewIdentityComponent implements OnInit {
                 var a = document.createElement('a');
                 var blob = new Blob([data.privateKey], {'type':'application/octet-stream'});
                 a.href = window.URL.createObjectURL(blob);
-                a.download = 'privateKey' + this.data.name + '.pem';
+                a.download = 'privateKey-' + this.data.name + '.pem';
                 a.click();
             }, (error) => {
                 this.isLoading = false;
