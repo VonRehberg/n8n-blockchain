@@ -1,5 +1,9 @@
 <mat-tab-group>
-    <mat-tab label="Content">
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-progress-spinner mode="indeterminate" diameter="25" *ngIf="dataService.isReloading"></mat-progress-spinner>
+            Blocks
+        </ng-template>
         <mat-accordion multi>
             <mat-expansion-panel expanded [disabled]="!dataService.isConnected">
                 <mat-expansion-panel-header>
@@ -19,10 +23,18 @@
             </mat-expansion-panel>
         </mat-accordion>
     </mat-tab>
-    <mat-tab label="Network">
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-progress-spinner mode="indeterminate" diameter="25" *ngIf="dataService.isReloading"></mat-progress-spinner>
+            Network
+        </ng-template>
         <app-network></app-network>
     </mat-tab>
-    <mat-tab label="Identities">
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-progress-spinner mode="indeterminate" diameter="25" *ngIf="dataService.isReloading"></mat-progress-spinner>
+            Identities
+        </ng-template>
         <app-identities></app-identities>
     </mat-tab>
 </mat-tab-group>

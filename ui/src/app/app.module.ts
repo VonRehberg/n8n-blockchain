@@ -11,7 +11,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -20,6 +20,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { BlocksComponent } from './blocks/blocks.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { DataService } from './data.service';
+import { DEFAULT_TIMEOUT, TimeoutInterceptor } from './timeoutInterceptor';
 import { ConnectComponent } from './connect/connect.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -75,7 +76,11 @@ import { WriteContentComponent } from './writeContent/writeContent.component';
     NewIdentityComponent,
     WriteContentComponent
   ],
-  providers: [DataService],
+  providers: [
+    DataService, 
+    [{provide: HTTP_INTERCEPTORS, useClass: TimeoutInterceptor, multi: true}],
+    [{ provide: DEFAULT_TIMEOUT, useValue: 5000 }]
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

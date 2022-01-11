@@ -64,7 +64,7 @@ export class DataService {
     }
 
     isLoading = false;
-
+    isReloading = false;
 
     private set endpoint(value) {
         localStorage.setItem('endpoint', value);
@@ -125,10 +125,15 @@ export class DataService {
         return this.http.post("http://" + this.endpoint + "/webhook/joinNetwork", {endpoint: endpoint}, {headers: {"content-type": "application/json"}});
     }
 
-    fetchNodeInfos() {
-        this.isLoading = true;
+    fetchNodeInfos(reloading?: boolean) {
+        if (reloading) {
+            this.isReloading = true;
+        } else {
+            this.isLoading = true;
+        }
         this.http.get("http://" + this.endpoint + "/webhook/getBlocksPaginated?top=20").subscribe((data: any[]) => {
             this.isLoading = false;
+            this.isReloading = false;
             this.isConnected = true;
             this.blocks = data.map((block) => {
                 return {
@@ -144,34 +149,50 @@ export class DataService {
             this.colorScheme = {
                 domain: ['#9ebedf'],
             };
-            this.getNodes();
+            this.getNodes(reloading);
         }, (error) => {
             this.isLoading = false;
+            this.isReloading = false;
             this.displayMessage('Could not retrieve blocks');
         });
     }
 
-    getNodes() {
-        this.isLoading = true;
+    private getNodes(reloading?: boolean) {
+        if (reloading) {
+            this.isReloading = true;
+        } else {
+            this.isLoading = true;
+        }
         this.http.get("http://" + this.endpoint + "/webhook/getNodes").subscribe((data: any[]) => {
             this.isLoading = false;
+            this.isReloading = false;
             this.isConnected = true;
             this.nodes = data;
-            this.getIdentities();
+            this.getIdentities(reloading);
         }, (error) => {
             this.isLoading = false;
+            this.isReloading = false;
             this.displayMessage('Could not retrieve nodes');
         });
     }
 
-    getIdentities() {
-        this.isLoading = true;
+    private getIdentities(reloading?: boolean) {
+        if (reloading) {
+            this.isReloading = true;
+        } else {
+            this.isLoading = true;
+        }
         this.http.get("http://" + this.endpoint + "/webhook/getIdentities").subscribe((data: any[]) => {
             this.isLoading = false;
+            this.isReloading = false;
             this.isConnected = true;
             this.identities = data;
+            setTimeout(() => {
+                this.fetchNodeInfos(true);
+            }, 5000);
         }, (error) => {
             this.isLoading = false;
+            this.isReloading = false;
             this.displayMessage('Could not retrieve nodes');
         });
     }
