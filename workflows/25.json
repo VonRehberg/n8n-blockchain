@@ -1,0 +1,176 @@
+[{
+  "id": 25,
+  "name": "Add Transactions Of Last Block Back To Queue",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "collection": "blocks",
+        "options": {
+          "limit": 1,
+          "sort": "{\"number\": -1}"
+        }
+      },
+      "name": "Get Last Block",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [],
+          "string": [
+            {
+              "value1": "={{$node[\"Get Last Block\"].json[\"publicKey\"]}}",
+              "value2": "={{$node[\"Get Own Identity\"].json[\"publicKey\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return $items(\"Get Last Block\")[0].json.payload.transactions.map((item) => {\n  return {\n    json: item,\n    };\n});"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "collection": "identities",
+        "options": {},
+        "query": "{\"name\": \"me\"}"
+      },
+      "name": "Get Own Identity",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "currentTransactions",
+        "fields": "data,publicKey,signature,author,createdAt",
+        "options": {
+          "dateFields": "createdAt"
+        }
+      },
+      "name": "Add back to Current Transactions",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        280
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Get Last Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Last Block": {
+      "main": [
+        [
+          {
+            "node": "Get Own Identity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Own Identity": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "Add back to Current Transactions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2022-01-11T18:42:47.744Z",
+  "updatedAt": "2022-01-11T18:56:59.619Z",
+  "settings": {},
+  "staticData": null
+}]

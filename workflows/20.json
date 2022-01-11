@@ -198,7 +198,7 @@
       "typeVersion": 1,
       "position": [
         2720,
-        920
+        1120
       ],
       "credentials": {
         "mongoDb": {
@@ -307,7 +307,7 @@
       "typeVersion": 1,
       "position": [
         2720,
-        460
+        660
       ]
     },
     {
@@ -359,7 +359,19 @@
       "typeVersion": 1,
       "position": [
         2720,
-        700
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "25"
+      },
+      "name": "Add Transactions Of Last Block Back To Queue",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        2720,
+        440
       ]
     }
   ],
@@ -491,7 +503,7 @@
         ],
         [
           {
-            "node": "Rename Blocks Collection",
+            "node": "Add Transactions Of Last Block Back To Queue",
             "type": "main",
             "index": 0
           }
@@ -604,10 +616,21 @@
           }
         ]
       ]
+    },
+    "Add Transactions Of Last Block Back To Queue": {
+      "main": [
+        [
+          {
+            "node": "Rename Blocks Collection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2021-12-10T20:45:03.101Z",
-  "updatedAt": "2021-12-15T09:12:28.316Z",
+  "updatedAt": "2022-01-11T18:44:14.955Z",
   "settings": {},
   "staticData": null
 }]
