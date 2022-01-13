@@ -53,7 +53,9 @@
       "parameters": {
         "requestMethod": "POST",
         "url": "=http://{{$node[\"Webhook\"].json[\"body\"][\"endpoint\"]}}/webhook/addNode",
-        "options": {},
+        "options": {
+          "timeout": 10000
+        },
         "bodyParametersUi": {
           "parameter": [
             {
@@ -276,15 +278,10 @@
           }
         ]
       ]
-    },
-    "Insert Node": {
-      "main": [
-        []
-      ]
     }
   },
   "createdAt": "2021-12-05T21:07:47.673Z",
-  "updatedAt": "2021-12-08T15:41:46.562Z",
+  "updatedAt": "2022-01-12T15:31:35.681Z",
   "settings": {},
   "staticData": null
 }]

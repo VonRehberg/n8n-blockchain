@@ -9,7 +9,7 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -100,
+        -940,
         280
       ]
     },
@@ -30,7 +30,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        100,
+        -740,
         280
       ]
     },
@@ -42,7 +42,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1,
       "position": [
-        300,
+        -540,
         280
       ]
     },
@@ -61,7 +61,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        500,
+        -340,
         280
       ]
     },
@@ -73,7 +73,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1,
       "position": [
-        720,
+        -120,
         300
       ]
     },
@@ -224,7 +224,7 @@
       "type": "n8n-nodes-base.cron",
       "typeVersion": 1,
       "position": [
-        -100,
+        -940,
         480
       ]
     },
@@ -283,20 +283,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        2120,
-        20
-      ]
-    },
-    {
-      "parameters": {
-        "workflowId": "22"
-      },
-      "name": "Lock Mining Process",
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1,
-      "position": [
-        2340,
-        20
+        80,
+        300
       ]
     },
     {
@@ -375,6 +363,50 @@
       "position": [
         2720,
         440
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "workflowId": "21"
+      },
+      "name": "Check Process Is Running1",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        280,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$data[\"processIsRunning\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "IF3",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "22"
+      },
+      "name": "Lock Mining",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        700,
+        320
       ]
     }
   ],
@@ -428,12 +460,7 @@
       "main": [
         [
           {
-            "node": "Get Nodes Apart From Own",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Get Own Last Block",
+            "node": "Set1",
             "type": "main",
             "index": 0
           }
@@ -549,11 +576,6 @@
             "node": "Get Blocks From Node",
             "type": "main",
             "index": 0
-          },
-          {
-            "node": "Set1",
-            "type": "main",
-            "index": 0
           }
         ],
         [
@@ -569,7 +591,7 @@
       "main": [
         [
           {
-            "node": "Lock Mining Process",
+            "node": "Check Process Is Running1",
             "type": "main",
             "index": 0
           }
@@ -630,10 +652,49 @@
           }
         ]
       ]
+    },
+    "Check Process Is Running1": {
+      "main": [
+        [
+          {
+            "node": "IF3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF3": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Lock Mining",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lock Mining": {
+      "main": [
+        [
+          {
+            "node": "Get Own Last Block",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Nodes Apart From Own",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2021-12-10T20:45:03.101Z",
-  "updatedAt": "2022-01-11T19:14:53.312Z",
+  "updatedAt": "2022-01-13T14:05:47.923Z",
   "settings": {},
   "staticData": null
 }]

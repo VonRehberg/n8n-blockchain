@@ -53,7 +53,7 @@
     },
     {
       "parameters": {
-        "functionCode": "const existingItems = $items(\"Get Nodes Apart From Own\");\nconst ownNode = $items(\"Get Own Node\");\nconst crypto = require('crypto');\n// const items = $items(\"Fetch Remote Nodes\");\nconst newItems = [];\nfor (const item of items) {\n  if (!item.json.hasOwnProperty(\"push\")) {\n    continue;\n  }\n  for (const node of item.json) {\n    let found = false;\n    for (const existingItem of existingItems) {\n      if (existingItem.json.endpoint === node.endpoint) {\n        found = true;\n      }\n    }\n    if (found === false && node.endpoint !== ownNode[0].json.endpoint) {\n      node.name = crypto.createHash('md5').update(node.name).digest(\"hex\");\n      newItems.push({json: node});\n    }\n  }\n}\n\nreturn newItems;"
+        "functionCode": "const existingItems = $items(\"Get Nodes Apart From Own\");\nconst ownNode = $items(\"Get Own Node\");\nconst crypto = require('crypto');\n// const items = $items(\"Fetch Remote Nodes\");\nconst newItems = [];\nfor (const item of items) {\n  if (item.json.hasOwnProperty(\"error\")) {\n    continue;\n  }\n  for (const node of item.json) {\n    let found = false;\n    for (const existingItem of existingItems) {\n      if (existingItem.json.endpoint === node.endpoint) {\n        found = true;\n      }\n    }\n    if (found === false && node.endpoint !== ownNode[0].json.endpoint) {\n      node.name = crypto.createHash('md5').update(node.name).digest(\"hex\");\n      newItems.push({json: node});\n    }\n  }\n}\n\nreturn newItems;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
@@ -191,7 +191,7 @@
     }
   },
   "createdAt": "2021-12-06T13:33:11.370Z",
-  "updatedAt": "2022-01-11T19:26:56.469Z",
+  "updatedAt": "2022-01-12T14:51:41.202Z",
   "settings": {},
   "staticData": null
 }]

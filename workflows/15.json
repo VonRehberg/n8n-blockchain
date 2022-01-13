@@ -9,8 +9,8 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        240,
-        240
+        -640,
+        200
       ]
     },
     {
@@ -27,8 +27,8 @@
       "type": "n8n-nodes-base.cron",
       "typeVersion": 1,
       "position": [
-        240,
-        480
+        -640,
+        440
       ]
     },
     {
@@ -143,26 +143,6 @@
     },
     {
       "parameters": {
-        "operation": "delete",
-        "collection": "runningOperations",
-        "query": "{\"type\": \"mining\"}"
-      },
-      "name": "Remove Mining Lock",
-      "type": "n8n-nodes-base.mongoDb",
-      "typeVersion": 1,
-      "position": [
-        3220,
-        380
-      ],
-      "credentials": {
-        "mongoDb": {
-          "id": "1",
-          "name": "MongoDB account"
-        }
-      }
-    },
-    {
-      "parameters": {
         "conditions": {
           "number": [],
           "boolean": [
@@ -202,8 +182,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1,
       "position": [
-        720,
-        400
+        -160,
+        360
       ]
     },
     {
@@ -214,8 +194,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1,
       "position": [
-        1140,
-        420
+        260,
+        380
       ]
     },
     {
@@ -235,8 +215,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        520,
-        400
+        -360,
+        360
       ]
     },
     {
@@ -254,9 +234,93 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        920,
+        40,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "21"
+      },
+      "name": "Check Process Is Running1",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        720,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "22"
+      },
+      "name": "Set Process Is Running1",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1140,
         400
       ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$data[\"processIsRunning\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "If Is Running1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        920,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "type",
+              "value": "checkNetwork"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set Type Check Network",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        520,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "runningOperations",
+        "query": "{\"type\": {\"$in\": [\"checkNetwork\", \"mining\"]}}"
+      },
+      "name": "Remove Lock",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        3220,
+        380
+      ],
+      "credentials": {
+        "mongoDb": {
+          "id": "1",
+          "name": "MongoDB account"
+        }
+      }
     }
   ],
   "connections": {
@@ -341,7 +405,7 @@
       "main": [
         [
           {
-            "node": "Remove Mining Lock",
+            "node": "Remove Lock",
             "type": "main",
             "index": 0
           }
@@ -359,7 +423,7 @@
         ],
         [
           {
-            "node": "Remove Mining Lock",
+            "node": "Remove Lock",
             "type": "main",
             "index": 0
           }
@@ -392,7 +456,7 @@
       "main": [
         [
           {
-            "node": "Get Metadata of Previous Block",
+            "node": "Set Type Check Network",
             "type": "main",
             "index": 0
           }
@@ -421,10 +485,55 @@
           }
         ]
       ]
+    },
+    "Check Process Is Running1": {
+      "main": [
+        [
+          {
+            "node": "If Is Running1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Is Running1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Set Process Is Running1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Process Is Running1": {
+      "main": [
+        [
+          {
+            "node": "Get Metadata of Previous Block",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Type Check Network": {
+      "main": [
+        [
+          {
+            "node": "Check Process Is Running1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2021-12-08T18:59:01.111Z",
-  "updatedAt": "2021-12-10T21:19:20.046Z",
+  "updatedAt": "2022-01-13T14:08:53.728Z",
   "settings": {},
   "staticData": null
 }]
