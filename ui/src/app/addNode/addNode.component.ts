@@ -6,21 +6,23 @@ import { MatStepper } from '@angular/material/stepper';
 import { ConnectData, DataService } from '../data.service';
 
 @Component({
-  selector: 'app-join-network',
-  templateUrl: './joinNetwork.component.html',
-  styleUrls: ['./joinNetwork.component.scss']
+  selector: 'app-add-node',
+  templateUrl: './addNode.component.html',
+  styleUrls: ['./addNode.component.scss']
 })
-export class JoinNetworkComponent implements OnInit {
+export class AddNodeComponent implements OnInit {
     @ViewChild('stepper')
     _stepper: MatStepper;
     nextDisabled = false;
     nodeNotInitialized = false;
+    username;
+    password;
     isLoading = false;
     endpointFormGroup: FormGroup;
     constructor(
         private snackbar: MatSnackBar,
         private _formBuilder: FormBuilder,
-        public dialogRef: MatDialogRef<JoinNetworkComponent>,
+        public dialogRef: MatDialogRef<AddNodeComponent>,
         @Inject(MAT_DIALOG_DATA) public data: ConnectData,
         public dataService: DataService) { }
 
@@ -28,6 +30,8 @@ export class JoinNetworkComponent implements OnInit {
     ngOnInit() {
         this.endpointFormGroup = this._formBuilder.group({
             endpointCtrl: ['192.168.0.1:1234', Validators.required],
+            usernameCtrl: ['username', Validators.required],
+            passwordCtrl: ['password', Validators.required],
         });
     }
     
@@ -36,7 +40,7 @@ export class JoinNetworkComponent implements OnInit {
     }
     connect(): void {
         this.isLoading = true;
-        this.dataService.joinNetwork(this.data.endpoint).subscribe((data) => {
+        this.dataService.joinNetwork(this.data.endpoint, this.username, this.password).subscribe((data) => {
             this.isLoading = false;
             this.dialogRef.close(true);
         }, (error) => {
@@ -62,7 +66,7 @@ export class JoinNetworkComponent implements OnInit {
 
     setupNode() {
         this.isLoading = true;
-        this.dataService.setupNodeBy(this.data.endpoint).subscribe(() => {
+        this.dataService.setupNodeBy(this.data.endpoint, this.username, this.password).subscribe(() => {
             this.isLoading = false;
             this.nextDisabled = false;
             this.nodeNotInitialized = false;

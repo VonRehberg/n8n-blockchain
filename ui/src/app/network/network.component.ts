@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConnectComponent } from '../connect/connect.component';
 import { DataService } from '../data.service';
-import { JoinNetworkComponent } from '../joinNetwork/joinNetwork.component';
+import { AddNodeComponent } from '../addNode/addNode.component';
 
 @Component({
   selector: 'app-network',
@@ -23,24 +23,24 @@ export class NetworkComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.dataService.fetchNodeInfos();
+      this.dataService.fetchNodeInfos(false);
     });
   }
 
-  openJoinNetworkDialog() {
-    const dialogRef = this.dialog.open(JoinNetworkComponent , {
+  openAddNodeDialog() {
+    const dialogRef = this.dialog.open(AddNodeComponent , {
       width: '550px',
       data: {endpoint: '192.168.188.20:63417'},
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.dataService.fetchNodeInfos();
+      this.dataService.fetchNodeInfos(false);
     });
   }
 
   connectTo(node) {
     this.dataService.setEndpointAndCheck(node.endpoint).subscribe(() => {
-      this.dataService.fetchNodeInfos();
+      this.dataService.fetchNodeInfos(false);
     }, (error) => {
       this.snackbar.open("Failed to connect", "OK");
     })

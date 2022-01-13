@@ -8,7 +8,7 @@ import { DataService } from '../data.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
+  live = true;
   constructor(private router: Router,
     public dataService: DataService) { }
 
@@ -23,4 +23,7 @@ export class HomeComponent implements OnInit {
     this.router.navigateByUrl("/permission/findSupportDocuments");
   }
 
+  stringify(data) {
+    return JSON.stringify(data, undefined, "  ");
+  }
 }

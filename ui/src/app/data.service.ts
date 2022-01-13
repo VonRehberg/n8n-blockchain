@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { shareReplay } from "rxjs/operators";
 
 @Injectable({
     providedIn: 'platform',
@@ -52,6 +53,7 @@ export class DataService {
     public blocks = [];
     public nodes = [{name: "me", publicKey: "--------FAKE KEY----------"}];
     public identities = [];
+    public pendingTransactions = [];
     
 
     constructor(private http: HttpClient, private snackbar: MatSnackBar) {
@@ -59,7 +61,7 @@ export class DataService {
         this.createRandomBlocks();
         if (this.endpoint) {
             this.checkEndpoint();
-            this.fetchNodeInfos();
+            this.fetchNodeInfos(true);
         }
     }
 
@@ -93,12 +95,12 @@ export class DataService {
     }
 
     checkEndpointBy(endpoint) {
-        return this.http.get("http://" + endpoint + "/webhook/isNodeSetup")
+        return this.http.get("http://" + endpoint + "/webhook/isNodeSetup").pipe(shareReplay());
     }
 
-    setupNode() {
+    setupNode(username, password) {
         this.isLoading = true;
-        const subscription = this.setupNodeBy(this.endpoint);
+        const subscription = this.setupNodeBy(this.endpoint, username, password);
         subscription.subscribe((data: any) => {
             this.isEndpointSetup = true;
             this.isLoading = false;
@@ -109,23 +111,23 @@ export class DataService {
         return subscription;
     }
 
-    setupNodeBy(endpoint) {
-        return this.http.get("http://" + endpoint + "/webhook/setupNode");
+    setupNodeBy(endpoint, username, password) {
+        return this.http.get("http://" + endpoint + "/webhook/setupNode", {headers: {authorization: 'Basic ' + btoa(username + ':' + password)}}).pipe(shareReplay());
     }
 
     createIdentity(name) {
-        return this.http.post("http://" + this.endpoint + "/webhook/createIdentity", {name}, {headers: {"content-type": "application/json"}});
+        return this.http.post("http://" + this.endpoint + "/webhook/createIdentity", {name}, {headers: {"content-type": "application/json"}}).pipe(shareReplay());
     }
 
     createTransaction(data) {
-        return this.http.post("http://" + this.endpoint + "/webhook/createTransaction", data, {headers: {"content-type": "application/json"}});
+        return this.http.post("http://" + this.endpoint + "/webhook/createTransaction", data, {headers: {"content-type": "application/json"}}).pipe(shareReplay());
     }
 
-    joinNetwork(endpoint) {
-        return this.http.post("http://" + this.endpoint + "/webhook/joinNetwork", {endpoint: endpoint}, {headers: {"content-type": "application/json"}});
+    joinNetwork(endpoint, username, password) {
+        return this.http.post("http://" + endpoint + "/webhook/joinNetwork", {endpoint: this.endpoint}, {headers: {"content-type": "application/json", authorization: 'Basic ' + btoa(username + ':' + password)}}).pipe(shareReplay());
     }
 
-    fetchNodeInfos(reloading?: boolean) {
+    fetchNodeInfos(keepRefreshing: boolean, reloading?: boolean) {
         if (reloading) {
             this.isReloading = true;
         } else {
@@ -149,7 +151,7 @@ export class DataService {
             this.colorScheme = {
                 domain: ['#9ebedf'],
             };
-            this.getNodes(reloading);
+            this.getNodes(keepRefreshing, reloading);
         }, (error) => {
             this.isLoading = false;
             this.isReloading = false;
@@ -157,7 +159,7 @@ export class DataService {
         });
     }
 
-    private getNodes(reloading?: boolean) {
+    private getNodes(keepRefreshing: boolean, reloading?: boolean) {
         if (reloading) {
             this.isReloading = true;
         } else {
@@ -168,7 +170,7 @@ export class DataService {
             this.isReloading = false;
             this.isConnected = true;
             this.nodes = data;
-            this.getIdentities(reloading);
+            this.getIdentities(keepRefreshing, reloading);
         }, (error) => {
             this.isLoading = false;
             this.isReloading = false;
@@ -176,7 +178,7 @@ export class DataService {
         });
     }
 
-    private getIdentities(reloading?: boolean) {
+    private getIdentities(keepRefreshing: boolean, reloading?: boolean) {
         if (reloading) {
             this.isReloading = true;
         } else {
@@ -187,9 +189,30 @@ export class DataService {
             this.isReloading = false;
             this.isConnected = true;
             this.identities = data;
-            setTimeout(() => {
-                this.fetchNodeInfos(true);
-            }, 5000);
+            this.getPendingTransactions(keepRefreshing, reloading);
+        }, (error) => {
+            this.isLoading = false;
+            this.isReloading = false;
+            this.displayMessage('Could not retrieve nodes');
+        });
+    }
+
+    private getPendingTransactions(keepRefreshing: boolean, reloading?: boolean) {
+        if (reloading) {
+            this.isReloading = true;
+        } else {
+            this.isLoading = true;
+        }
+        this.http.get("http://" + this.endpoint + "/webhook/pendingTransactions").subscribe((data: any[]) => {
+            this.isLoading = false;
+            this.isReloading = false;
+            this.isConnected = true;
+            this.pendingTransactions = data;
+            if (keepRefreshing) {
+                setTimeout(() => {
+                    this.fetchNodeInfos(true);
+                }, 5000);
+            }
         }, (error) => {
             this.isLoading = false;
             this.isReloading = false;

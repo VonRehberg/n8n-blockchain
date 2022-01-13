@@ -37,4 +37,23 @@
         </ng-template>
         <app-identities></app-identities>
     </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-progress-spinner mode="indeterminate" diameter="25" *ngIf="dataService.isReloading"></mat-progress-spinner>
+            <span [(matBadge)]="dataService.pendingTransactions.length" matBadgeOverlap="false" [matBadgeHidden]="dataService.pendingTransactions.length === 0">Pending Transactions</span>
+        </ng-template>
+        <mat-accordion>
+            <mat-expansion-panel *ngFor="let transaction of dataService.pendingTransactions">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{transaction.data.type || 'custom'}}
+                </mat-panel-title>
+                <mat-panel-description>
+                  {{transaction.createdAt | timeago:live}}
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <pre>{{stringify(transaction)}}</pre>
+            </mat-expansion-panel>
+          </mat-accordion>
+    </mat-tab>
 </mat-tab-group>

@@ -1,8 +1,16 @@
-<h1 mat-dialog-title>Join a Network</h1>
+<h1 mat-dialog-title>Add a Node</h1>
 <div mat-dialog-content>
   <mat-horizontal-stepper #stepper>
     <mat-step [stepControl]="endpointFormGroup" label="Enter a valid Endpoint">
         <form [formGroup]="endpointFormGroup">
+          <mat-form-field appearance="fill">
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="usernameCtrl" placeholder="Username" [(ngModel)]="username">
+          </mat-form-field><br />
+          <mat-form-field appearance="fill">
+            <mat-label>Password</mat-label>
+            <input type="password" matInput formControlName="passwordCtrl" placeholder="Password" [(ngModel)]="password">
+          </mat-form-field><br />
           <mat-form-field appearance="fill">
             <mat-label>Address</mat-label>
             <input matInput formControlName="endpointCtrl" placeholder="192.168.0.1:1234" [(ngModel)]="data.endpoint"
@@ -21,7 +29,7 @@
                 <button mat-raised-button color="accent" (click)="setupNode()">Setup Node</button>
             </div>
             <div *ngIf="!dataService.isLoading && !nodeNotInitialized && !isLoading">
-                By clicking next you will join this network. Your own blocks will be wiped, which cannot be undone. Depending on the number of available blocks, synchronization may take a while.
+                By clicking "next" this node will join another network. The existing blocks of the joining node will be wiped, which cannot be undone. Depending on the number of available blocks, synchronization may take a while.
             </div>
         </div>
       </mat-step>

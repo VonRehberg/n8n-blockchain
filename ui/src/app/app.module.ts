@@ -25,10 +25,11 @@ import { ConnectComponent } from './connect/connect.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatBadgeModule } from '@angular/material/badge';
 import { BlockDetailsComponent } from './block-details/block-details.component';
 import { TimeagoModule } from 'ngx-timeago';
 import { NetworkComponent } from './network/network.component';
-import { JoinNetworkComponent } from './joinNetwork/joinNetwork.component';
+import { AddNodeComponent } from './addNode/addNode.component';
 import { IdentitiesComponent } from './identities/identities.component';
 import { NewIdentityComponent } from './newIdentity/newIdentity.component';
 import { WriteContentComponent } from './writeContent/writeContent.component';
@@ -41,7 +42,7 @@ import { WriteContentComponent } from './writeContent/writeContent.component';
     BlocksComponent,
     ConnectComponent,
     NetworkComponent,
-    JoinNetworkComponent,
+    AddNodeComponent,
     IdentitiesComponent,
     NewIdentityComponent,
     WriteContentComponent,
@@ -59,6 +60,7 @@ import { WriteContentComponent } from './writeContent/writeContent.component';
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatDialogModule,
+    MatBadgeModule,
     CdkStepperModule,
     ReactiveFormsModule,
     HttpClientModule,
@@ -72,7 +74,7 @@ import { WriteContentComponent } from './writeContent/writeContent.component';
   ],
   entryComponents: [
     ConnectComponent,
-    JoinNetworkComponent,
+    AddNodeComponent,
     NewIdentityComponent,
     WriteContentComponent
   ],

@@ -1,5 +1,5 @@
 <div class="container">
-  <button mat-raised-button color="primary" [disabled]="dataService.isConnected === false" (click)="openJoinNetworkDialog()">Join a network</button>
+  <button mat-raised-button color="primary" [disabled]="dataService.isConnected === false" (click)="openAddNodeDialog()">Add Node to Network</button>
   <div [class.blurred]="dataService.isConnected === false" class="transactions">
     <mat-accordion>
       <mat-expansion-panel *ngFor="let node of dataService.nodes">

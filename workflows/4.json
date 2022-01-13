@@ -15,6 +15,7 @@
     },
     {
       "parameters": {
+        "authentication": "basicAuth",
         "path": "0c8348ae-a11b-42b8-abab-619ef478a35d",
         "responseMode": "lastNode",
         "options": {}
@@ -26,7 +27,13 @@
         240,
         480
       ],
-      "webhookId": "0c8348ae-a11b-42b8-abab-619ef478a35d"
+      "webhookId": "0c8348ae-a11b-42b8-abab-619ef478a35d",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "Basic Auth Protection"
+        }
+      }
     },
     {
       "parameters": {
@@ -163,7 +170,7 @@
     }
   },
   "createdAt": "2021-12-05T12:25:28.678Z",
-  "updatedAt": "2021-12-08T19:21:51.648Z",
+  "updatedAt": "2022-01-13T15:45:32.425Z",
   "settings": {},
   "staticData": null
 }]

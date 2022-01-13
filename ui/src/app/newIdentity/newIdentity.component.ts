@@ -48,7 +48,11 @@ export class NewIdentityComponent implements OnInit {
             }, (error) => {
                 this.isLoading = false;
                 this._stepper.previous();
-                this.snackbar.open("Failed to create identity", "OK");
+                if (error.status === 409) {
+                    this.snackbar.open("An identity with this name already exists   ", "OK");
+                } else {
+                    this.snackbar.open("Failed to create identity", "OK");
+                }
             });
         } else {
             this.dialogRef.close(true);

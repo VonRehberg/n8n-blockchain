@@ -40,7 +40,7 @@ export class BlocksComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.dataService.fetchNodeInfos();
+      this.dataService.fetchNodeInfos(true);
     });
   }
 
@@ -51,7 +51,7 @@ export class BlocksComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.dataService.fetchNodeInfos();
+      this.dataService.fetchNodeInfos(false);
     });
   }
 }

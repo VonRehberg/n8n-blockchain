@@ -13,6 +13,8 @@ export class ConnectComponent implements OnInit {
     @ViewChild('stepper')
     _stepper: MatStepper;
     nextDisabled = false;
+    username;
+    password;
     endpointFormGroup: FormGroup;
     constructor(
         private _formBuilder: FormBuilder,
@@ -47,7 +49,7 @@ export class ConnectComponent implements OnInit {
     }
 
     setupNode() {
-        this.dataService.setupNode().subscribe(() => {
+        this.dataService.setupNode(this.username, this.password).subscribe(() => {
             this.nextDisabled = false;
         });
     }

@@ -15,6 +15,7 @@
     },
     {
       "parameters": {
+        "authentication": "basicAuth",
         "httpMethod": "POST",
         "path": "joinNetwork",
         "responseMode": "responseNode",
@@ -27,7 +28,13 @@
         240,
         540
       ],
-      "webhookId": "4343d6b5-838f-413e-8c29-829b9c4c7649"
+      "webhookId": "4343d6b5-838f-413e-8c29-829b9c4c7649",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "Basic Auth Protection"
+        }
+      }
     },
     {
       "parameters": {
@@ -281,7 +288,7 @@
     }
   },
   "createdAt": "2021-12-05T21:07:47.673Z",
-  "updatedAt": "2022-01-12T15:31:35.681Z",
+  "updatedAt": "2022-01-13T15:46:21.010Z",
   "settings": {},
   "staticData": null
 }]
