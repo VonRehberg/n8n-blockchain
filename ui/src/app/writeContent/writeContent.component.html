@@ -3,8 +3,9 @@
   <mat-horizontal-stepper #stepper *ngIf="isLoading === false">
     <mat-step [stepControl]="privateKeyFormGroup" label="Pick Private Key">
       <form [formGroup]="privateKeyFormGroup">
+        Pick a private key. If you don't have one yet, create an identity in the "Identities" tab.
         <input class="hide" id="input-file-id" type="file" (change)="handlePrivateKeyChange($event)" />
-        <label class="mat-focus-indicator mat-raised-button mat-button-base mat-primary" mat-raised-button for="input-file-id">Choose Files</label>
+        <label class="mat-focus-indicator mat-raised-button mat-button-base mat-primary" mat-raised-button for="input-file-id">Choose Private Key</label>
       </form>
     </mat-step>
     <mat-step [stepControl]="contentFormGroup" label="Enter Transaction Details">
