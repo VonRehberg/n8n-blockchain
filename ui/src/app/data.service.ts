@@ -72,7 +72,7 @@ export class DataService {
         localStorage.setItem('endpoint', value);
     }
     private get endpoint() {
-        return localStorage.getItem('endpoint');
+        return localStorage.getItem('endpoint') || "blockchain.vonrehberg.consulting:60001";
     }
     
     setEndpointAndCheck(endpoint: string) {
@@ -95,7 +95,7 @@ export class DataService {
     }
 
     checkEndpointBy(endpoint) {
-        return this.http.get("http://" + endpoint + "/webhook/isNodeSetup").pipe(shareReplay());
+        return this.http.get("https://blockchain-proxy.vonrehberg.consulting/isNodeSetup?endpoint=" + endpoint).pipe(shareReplay());
     }
 
     setupNode(username, password) {
@@ -112,19 +112,19 @@ export class DataService {
     }
 
     setupNodeBy(endpoint, username, password) {
-        return this.http.get("http://" + endpoint + "/webhook/setupNode", {headers: {authorization: 'Basic ' + btoa(username + ':' + password)}}).pipe(shareReplay());
+        return this.http.get("https://blockchain-proxy.vonrehberg.consulting/setupNode?endpoint=" + endpoint, {headers: {authorization: 'Basic ' + btoa(username + ':' + password)}}).pipe(shareReplay());
     }
 
     createIdentity(name) {
-        return this.http.post("http://" + this.endpoint + "/webhook/createIdentity", {name}, {headers: {"content-type": "application/json"}}).pipe(shareReplay());
+        return this.http.post("https://blockchain-proxy.vonrehberg.consulting/createIdentity?endpoint=" + this.endpoint, {name}, {headers: {"content-type": "application/json"}}).pipe(shareReplay());
     }
 
     createTransaction(data) {
-        return this.http.post("http://" + this.endpoint + "/webhook/createTransaction", data, {headers: {"content-type": "application/json"}}).pipe(shareReplay());
+        return this.http.post("https://blockchain-proxy.vonrehberg.consulting/createTransaction?endpoint=" + this.endpoint, data, {headers: {"content-type": "application/json"}}).pipe(shareReplay());
     }
 
     joinNetwork(endpoint, username, password) {
-        return this.http.post("http://" + endpoint + "/webhook/joinNetwork", {endpoint: this.endpoint}, {headers: {"content-type": "application/json", authorization: 'Basic ' + btoa(username + ':' + password)}}).pipe(shareReplay());
+        return this.http.post("https://blockchain-proxy.vonrehberg.consulting/joinNetwork?endpoint=" + endpoint, {endpoint: this.endpoint}, {headers: {"content-type": "application/json", authorization: 'Basic ' + btoa(username + ':' + password)}}).pipe(shareReplay());
     }
 
     fetchNodeInfos(keepRefreshing: boolean, reloading?: boolean) {
@@ -133,7 +133,7 @@ export class DataService {
         } else {
             this.isLoading = true;
         }
-        this.http.get("http://" + this.endpoint + "/webhook/getBlocksPaginated?top=20").subscribe((data: any[]) => {
+        this.http.get("https://blockchain-proxy.vonrehberg.consulting/getBlocksPaginated?top=20&endpoint=" + this.endpoint).subscribe((data: any[]) => {
             this.isLoading = false;
             this.isReloading = false;
             this.isConnected = true;
@@ -165,7 +165,7 @@ export class DataService {
         } else {
             this.isLoading = true;
         }
-        this.http.get("http://" + this.endpoint + "/webhook/getNodes").subscribe((data: any[]) => {
+        this.http.get("https://blockchain-proxy.vonrehberg.consulting/getNodes?endpoint=" + this.endpoint).subscribe((data: any[]) => {
             this.isLoading = false;
             this.isReloading = false;
             this.isConnected = true;
@@ -184,7 +184,7 @@ export class DataService {
         } else {
             this.isLoading = true;
         }
-        this.http.get("http://" + this.endpoint + "/webhook/getIdentities").subscribe((data: any[]) => {
+        this.http.get("https://blockchain-proxy.vonrehberg.consulting/getIdentities?endpoint=" + this.endpoint).subscribe((data: any[]) => {
             this.isLoading = false;
             this.isReloading = false;
             this.isConnected = true;
@@ -203,7 +203,7 @@ export class DataService {
         } else {
             this.isLoading = true;
         }
-        this.http.get("http://" + this.endpoint + "/webhook/pendingTransactions").subscribe((data: any[]) => {
+        this.http.get("https://blockchain-proxy.vonrehberg.consulting/pendingTransactions?endpoint=" + this.endpoint).subscribe((data: any[]) => {
             this.isLoading = false;
             this.isReloading = false;
             this.isConnected = true;
