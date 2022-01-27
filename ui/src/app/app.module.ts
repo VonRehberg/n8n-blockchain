@@ -81,7 +81,7 @@ import { WriteContentComponent } from './writeContent/writeContent.component';
   providers: [
     DataService, 
     [{provide: HTTP_INTERCEPTORS, useClass: TimeoutInterceptor, multi: true}],
-    [{ provide: DEFAULT_TIMEOUT, useValue: 5000 }]
+    [{ provide: DEFAULT_TIMEOUT, useValue: 10000 }]
   ],
   bootstrap: [AppComponent]
 })
