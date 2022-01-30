@@ -20,7 +20,7 @@ docker-compose stop
 The default name of the database, user and password for PostgreSQL can be changed in the [`.env`](.env) file in the current directory.
 
 ## Spinning up multiple nodes
-
+```
 docker-compose -p node1 up -t 20 -d
 docker-compose -p node2 up -t 20 -d
 docker-compose -p node3 up -t 20 -d
@@ -36,3 +36,4 @@ docker-compose -p node3 stop
 docker-compose -p node1 rm
 docker-compose -p node2 rm
 docker-compose -p node3 rm
+```
