@@ -34,6 +34,8 @@ compose_postgres_1         docker-entrypoint.sh postgres    Up      5432/tcp
 Copy the nginx port (here it's 61648), open a browser and navigate to http://YOUR_IP:PORT (It's important to use your IP, localhost will not work)
 Enter the username and password from the [`.env`](.env) file ( a / b ) and you will access the n8n UI.
 
+![image](https://user-images.githubusercontent.com/8611608/151718016-e84123cc-0f72-4f51-b7bd-dbca89c69a34.png)
+
 Now you can easily create new workflows or extend existing ones.
 To synchronize your workflows into your filesystem / git repository open the workflow "11 - Backup Workflows" and execute it.
 Afterwards you can commit the changes into your repository.
