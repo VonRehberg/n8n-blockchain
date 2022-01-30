@@ -1,6 +1,6 @@
 [{
-  "id": 27,
-  "name": "Get Locks",
+  "id": 28,
+  "name": "Remove All Locks",
   "active": true,
   "nodes": [
     {
@@ -15,7 +15,8 @@
     },
     {
       "parameters": {
-        "path": "getLocks",
+        "authentication": "basicAuth",
+        "path": "removeLocks",
         "responseMode": "lastNode",
         "responseData": "allEntries",
         "options": {}
@@ -27,12 +28,18 @@
         240,
         500
       ],
-      "webhookId": "b689d963-8cc7-438a-9c9b-5fee71c31de0"
+      "webhookId": "5c3770cb-d194-4902-8778-65dc44a2606b",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "Basic Auth Protection"
+        }
+      }
     },
     {
       "parameters": {
-        "collection": "runningOperations",
-        "options": {}
+        "operation": "delete",
+        "collection": "runningOperations"
       },
       "name": "MongoDB",
       "type": "n8n-nodes-base.mongoDb",
@@ -60,10 +67,21 @@
           }
         ]
       ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "createdAt": "2022-01-27T11:44:48.795Z",
-  "updatedAt": "2022-01-30T17:47:26.850Z",
+  "createdAt": "2022-01-30T17:40:59.526Z",
+  "updatedAt": "2022-01-30T17:47:06.172Z",
   "settings": {},
   "staticData": null
 }]
