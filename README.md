@@ -11,13 +11,32 @@ It consists of 5 docker components:
 You can find a running demo [here](https://vonrehberg.consulting/blockchain).
 ![NoCode](https://user-images.githubusercontent.com/8611608/151714423-38d489b6-0ef6-45e3-a303-7011ffa5387f.png)
 
-## Starting a single node
+## Development / Starting a single node
 
 Starting a single node can be achieved using the following commands
 ```
 cd compose
 docker-compose up -d
 ```
+At first all docker images will be downloaded. Afterwards all single docker containers are started. Especially the n8n container will take some time to import the existing workflows.
+
+In order to access n8n run
+```
+$ docker-compose ps
+          Name                        Command               State           Ports
+-----------------------------------------------------------------------------------------
+compose_mongodb_1          docker-entrypoint.sh mongod      Up      27017/tcp
+compose_n8n_1              tini -- /docker-entrypoint ...   Up      5678/tcp
+compose_nginx_1            /docker-entrypoint.sh ngin ...   Up      0.0.0.0:61648->80/tcp
+compose_nodeworkaround_1   docker-entrypoint.sh sh st ...   Up
+compose_postgres_1         docker-entrypoint.sh postgres    Up      5432/tcp
+```
+Copy the nginx port (here it's 61648), open a browser and navigate to http://YOUR_IP:PORT (It's important to use your IP, localhost will not work)
+Enter the username and password from the [`.env`](.env) file ( a / b ) and you will access the n8n UI.
+
+Now you can easily create new workflows or extend existing ones.
+To synchronize your workflows into your filesystem / git repository open the workflow "11 - Backup Workflows" and execute it.
+Afterwards you can commit the changes into your repository.
 
 To stop and delete it execute:
 
@@ -75,8 +94,3 @@ You will find the port when running the following command:
 docker-compose -p node1 ps
 ```
 
-## Development
-
-You can easily create new workflows or extend existing ones.
-To synchronize your workflows into your filesystem / git repository open the workflow "11 - Backup Workflows" and execute it.
-Afterwards you can commit the changes into your repository.
