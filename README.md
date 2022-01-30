@@ -1,26 +1,33 @@
-# n8n blockchain
+# NoCode Blockchain
 
-Starts n8n blockchain node.
+This is a working blockchain implementation using the nocode tool n8n.
+It consists of 5 docker components:
+- n8n as the core with administrative and protocol workflows
+- postgresql (to store n8n workflows and execution details)
+- mongodb (to store blockchain data like blocks, nodes and identities)
+- nodejs to close the feature gap of n8n
+- nginx (to overcome CORS issues in the web UI)
 
+You can find a running demo here https://vonrehberg.consulting/blockchain
 
-## Start
+## Starting a single node
 
+Starting a single node can be achieved using the following commands
 ```
+cd compose
 docker-compose up -d
 ```
 
-To stop it execute:
+To stop and delete it execute:
 
 ```
 docker-compose stop
+docker-compose rm
 ```
-
-## Configuration
-
-The default name of the database, user and password for PostgreSQL can be changed in the [`.env`](.env) file in the current directory.
 
 ## Spinning up multiple nodes
 ```
+cd compose
 docker-compose -p node1 up -t 20 -d
 docker-compose -p node2 up -t 20 -d
 docker-compose -p node3 up -t 20 -d
@@ -28,7 +35,10 @@ docker-compose -p node3 up -t 20 -d
 docker-compose -p node1 ps
 docker-compose -p node2 ps
 docker-compose -p node3 ps
+```
 
+To stop and delete all nodes run:
+```
 docker-compose -p node1 stop
 docker-compose -p node2 stop
 docker-compose -p node3 stop
@@ -37,3 +47,33 @@ docker-compose -p node1 rm
 docker-compose -p node2 rm
 docker-compose -p node3 rm
 ```
+
+The simplest way to setup and connect the nodes is using the included UI (see the UI section below).
+It's also possible to setup the nodes using the postman collection. In case you changed the default user and password, make sure you adapted the username and password variables of the collection accordingly.
+Additionally you have to adapt the node IP addresses and ports.
+
+## Configuration
+
+The default name of the database, user and password for PostgreSQL can be changed in the [`.env`](.env) file in the current directory.
+
+## Starting the UI
+
+In order to start the web UI open the console and run the following commands.
+```
+cd ui
+npm install
+npm start
+```
+
+Afterwards open your browser and navigate to http://localhost:4200
+In order to connect to a node you have to type in the IP address (not localhost!) of your PC and the port of the first node.
+You will find the port when running the following command:
+```
+docker-compose -p node1 ps
+```
+
+## Development
+
+You can easily create new workflows or extend existing ones.
+To synchronize your workflows into your filesystem / git repository open the workflow "11 - Backup Workflows" and execute it.
+Afterwards you can commit the changes into your repository.
