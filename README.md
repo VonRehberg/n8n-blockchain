@@ -1,6 +1,6 @@
 # NoCode Blockchain
 
-This is a working blockchain implementation using the nocode tool n8n.
+This is a working blockchain implementation using the nocode tool [n8n](https://github.com/n8n-io/n8n).
 It consists of 5 docker components:
 - n8n as the core with administrative and protocol workflows
 - postgresql (to store n8n workflows and execution details)
@@ -8,7 +8,7 @@ It consists of 5 docker components:
 - nodejs to close the feature gap of n8n
 - nginx (to overcome CORS issues in the web UI)
 
-You can find a running demo here https://vonrehberg.consulting/blockchain
+You can find a running demo [here](https://vonrehberg.consulting/blockchain).
 ![NoCode](https://user-images.githubusercontent.com/8611608/151714423-38d489b6-0ef6-45e3-a303-7011ffa5387f.png)
 
 ## Starting a single node
