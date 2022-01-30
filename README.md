@@ -9,6 +9,7 @@ It consists of 5 docker components:
 - nginx (to overcome CORS issues in the web UI)
 
 You can find a running demo here https://vonrehberg.consulting/blockchain
+![NoCode](https://user-images.githubusercontent.com/8611608/151714423-38d489b6-0ef6-45e3-a303-7011ffa5387f.png)
 
 ## Starting a single node
 
@@ -51,6 +52,8 @@ docker-compose -p node3 rm
 The simplest way to setup and connect the nodes is using the included UI (see the UI section below).
 It's also possible to setup the nodes using the postman collection. In case you changed the default user and password, make sure you adapted the username and password variables of the collection accordingly.
 Additionally you have to adapt the node IP addresses and ports.
+![image](https://user-images.githubusercontent.com/8611608/151714461-e6f7a78b-7c94-4c34-b938-945b62b11492.png)
+
 
 ## Configuration
 
