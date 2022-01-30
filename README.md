@@ -45,6 +45,8 @@ docker-compose stop
 docker-compose rm
 ```
 
+In order to update a running node with the latest workflows from the repository just restart the n8n container.
+
 ## Spinning up multiple nodes
 ```
 cd compose
