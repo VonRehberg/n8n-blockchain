@@ -1,7 +1,7 @@
 [{
-  "id": 22,
-  "name": "Set Process Is Running",
-  "active": false,
+  "id": 27,
+  "name": "Get Locks",
+  "active": true,
   "nodes": [
     {
       "parameters": {},
@@ -15,17 +15,31 @@
     },
     {
       "parameters": {
-        "operation": "insert",
-        "collection": "runningOperations",
-        "fields": "type",
+        "path": "getLocks",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
         "options": {}
       },
-      "name": "Set mining running",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        500
+      ],
+      "webhookId": "b689d963-8cc7-438a-9c9b-5fee71c31de0"
+    },
+    {
+      "parameters": {
+        "collection": "runningOperations",
+        "options": {}
+      },
+      "name": "MongoDB",
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1,
       "position": [
-        480,
-        300
+        560,
+        360
       ],
       "credentials": {
         "mongoDb": {
@@ -36,11 +50,11 @@
     }
   ],
   "connections": {
-    "Start": {
+    "Webhook": {
       "main": [
         [
           {
-            "node": "Set mining running",
+            "node": "MongoDB",
             "type": "main",
             "index": 0
           }
@@ -48,8 +62,8 @@
       ]
     }
   },
-  "createdAt": "2021-12-10T21:06:31.720Z",
-  "updatedAt": "2022-01-30T17:50:09.541Z",
+  "createdAt": "2022-01-27T11:44:48.795Z",
+  "updatedAt": "2022-01-30T17:47:26.850Z",
   "settings": {},
   "staticData": null
 }]

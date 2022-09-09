@@ -1,6 +1,6 @@
 [{
-  "id": 24,
-  "name": "Get Identities",
+  "id": 28,
+  "name": "Remove All Locks",
   "active": true,
   "nodes": [
     {
@@ -15,7 +15,8 @@
     },
     {
       "parameters": {
-        "path": "getIdentities",
+        "authentication": "basicAuth",
+        "path": "removeLocks",
         "responseMode": "lastNode",
         "responseData": "allEntries",
         "options": {}
@@ -27,19 +28,25 @@
         240,
         500
       ],
-      "webhookId": "2c6c377f-89cd-4efa-b59d-967220e78f99"
+      "webhookId": "5c3770cb-d194-4902-8778-65dc44a2606b",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "2",
+          "name": "Basic Auth Protection"
+        }
+      }
     },
     {
       "parameters": {
-        "collection": "identities",
-        "options": {}
+        "operation": "delete",
+        "collection": "runningOperations"
       },
       "name": "MongoDB",
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1,
       "position": [
-        540,
-        400
+        560,
+        360
       ],
       "credentials": {
         "mongoDb": {
@@ -47,18 +54,6 @@
           "name": "MongoDB account"
         }
       }
-    },
-    {
-      "parameters": {
-        "functionCode": "for (item of items) {\n  delete item.json.id;\n  delete item.json._id;\n  delete item.json.privateKey;\n}\nreturn items;"
-      },
-      "name": "Function",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        760,
-        400
-      ]
     }
   ],
   "connections": {
@@ -73,11 +68,11 @@
         ]
       ]
     },
-    "MongoDB": {
+    "Start": {
       "main": [
         [
           {
-            "node": "Function",
+            "node": "MongoDB",
             "type": "main",
             "index": 0
           }
@@ -85,8 +80,8 @@
       ]
     }
   },
-  "createdAt": "2021-12-13T21:49:15.485Z",
-  "updatedAt": "2022-01-30T17:49:48.764Z",
+  "createdAt": "2022-01-30T17:40:59.526Z",
+  "updatedAt": "2022-01-30T17:47:06.172Z",
   "settings": {},
   "staticData": null
 }]

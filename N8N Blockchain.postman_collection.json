@@ -7,21 +7,24 @@
 	"item": [
 		{
 			"name": "Setup Node1",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"endpoint\": \"{{node2}}\"}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
 					"raw": "http://{{node1}}/webhook/setupNode",
 					"protocol": "http",
@@ -38,21 +41,24 @@
 		},
 		{
 			"name": "Setup Node2",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"endpoint\": \"{{node2}}\"}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
 					"raw": "http://{{node2}}/webhook/setupNode",
 					"protocol": "http",
@@ -69,21 +75,24 @@
 		},
 		{
 			"name": "Setup Node3",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"endpoint\": \"{{node2}}\"}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
 					"raw": "http://{{node3}}/webhook/setupNode",
 					"protocol": "http",
@@ -101,6 +110,21 @@
 		{
 			"name": "Join Node 2 to Node 3 Network",
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
@@ -191,6 +215,21 @@
 		{
 			"name": "Join Node 1 to Node 2",
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
@@ -352,7 +391,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://{{node3}}/webhook/getBlocksPaginated?top=2&skip=4",
+					"raw": "http://{{node3}}/webhook/getBlocksPaginated?top=10&skip=0",
 					"protocol": "http",
 					"host": [
 						"{{node3}}"
@@ -364,11 +403,11 @@
 					"query": [
 						{
 							"key": "top",
-							"value": "2"
+							"value": "10"
 						},
 						{
 							"key": "skip",
-							"value": "4"
+							"value": "0"
 						}
 					]
 				}
@@ -408,6 +447,14 @@
 		{
 			"key": "node3",
 			"value": "192.168.188.20:55319"
+		},
+		{
+			"key": "username",
+			"value": "a"
+		},
+		{
+			"key": "password",
+			"value": "b"
 		}
 	]
 }
